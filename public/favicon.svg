@@ -1,11 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <defs>
     <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#F97316"/>
-      <stop offset="100%" style="stop-color:#7C3AED"/>
+      <stop offset="0%" style="stop-color:#FF3D85"/>
+      <stop offset="100%" style="stop-color:#14B8A6"/>
     </linearGradient>
   </defs>
-  <rect width="100" height="100" rx="20" fill="url(#g)"/>
-  <text x="50" y="42" font-family="Arial Black" font-size="28" fill="white" text-anchor="middle" font-weight="900">CB</text>
-  <path d="M25 58 Q30 52 40 56 Q50 60 50 56 Q50 60 60 56 Q70 52 75 58 Q78 62 70 68 Q60 76 50 80 Q40 76 30 68 Q22 62 25 58Z" fill="white" opacity="0.9"/>
+  <rect width="100" height="100" rx="22" fill="url(#g)"/>
+  <text x="50" y="68" font-size="58" text-anchor="middle">🍬</text>
 </svg>

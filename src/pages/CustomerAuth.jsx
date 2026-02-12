@@ -85,9 +85,9 @@ export default function CustomerAuth() {
           transition={{ duration: 0.5 }}
         >
           <div className="text-center mb-8">
-            <div className="w-14 h-14 rounded-2xl gradient-brand flex items-center justify-center mx-auto mb-4 font-bold">CB</div>
+            <div className="w-14 h-14 rounded-2xl gradient-brand flex items-center justify-center mx-auto mb-4 text-2xl">🍬</div>
             <h1 className="font-display text-2xl font-bold">Welcome to Couch Buddies</h1>
-            <p className="text-gray-400 mt-1">Sign in to track orders & earn rewards</p>
+            <p className="text-gray-400 mt-1">Sign in to track orders & earn sweet rewards</p>
           </div>
 
           <div className="glass-card space-y-5">

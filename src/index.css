@@ -14,10 +14,10 @@
   }
 
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Quicksand', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: #0A0E17;
+    background: #120B0F;
     color: #fff;
     min-height: 100vh;
   }
@@ -26,7 +26,7 @@
     width: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #1F2937;
+    background: #2A1B24;
   }
   ::-webkit-scrollbar-thumb {
     background: #4B5563;
@@ -165,11 +165,11 @@
   }
 
   .glow-brand {
-    box-shadow: 0 0 40px rgba(249, 115, 22, 0.15), 0 0 80px rgba(249, 115, 22, 0.05);
+    box-shadow: 0 0 40px rgba(255, 61, 133, 0.15), 0 0 80px rgba(255, 61, 133, 0.05);
   }
 
   .glow-accent {
-    box-shadow: 0 0 40px rgba(124, 58, 237, 0.15), 0 0 80px rgba(124, 58, 237, 0.05);
+    box-shadow: 0 0 40px rgba(20, 184, 166, 0.15), 0 0 80px rgba(20, 184, 166, 0.05);
   }
 }
 

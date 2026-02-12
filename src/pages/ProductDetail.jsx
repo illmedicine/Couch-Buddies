@@ -79,7 +79,7 @@ export default function ProductDetail() {
             {/* Size Selector */}
             {product.sizes?.length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Size</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Size / Count</label>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map(size => (
                     <button
@@ -101,7 +101,7 @@ export default function ProductDetail() {
             {/* Color Selector */}
             {product.colors?.length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Color</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Flavor</label>
                 <div className="flex flex-wrap gap-2">
                   {product.colors.map(color => (
                     <button

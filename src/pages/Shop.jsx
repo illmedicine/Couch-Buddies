@@ -38,8 +38,8 @@ export default function Shop() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-16">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="font-display text-3xl sm:text-4xl font-bold mb-2">Shop</h1>
-          <p className="text-gray-400">Browse our full collection of premium merch</p>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold mb-2">🍭 Sweet Shop</h1>
+          <p className="text-gray-400">Browse our full collection of CBD treats, candy goodies & herbal wellness products</p>
         </div>
 
         {/* Filters */}

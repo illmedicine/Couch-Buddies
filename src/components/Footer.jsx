@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { FiGithub, FiHeart } from 'react-icons/fi'
+import { FiHeart } from 'react-icons/fi'
 
 export default function Footer() {
   return (
@@ -9,11 +9,11 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-lg gradient-brand flex items-center justify-center font-bold text-sm">CB</div>
+              <div className="w-9 h-9 rounded-lg gradient-brand flex items-center justify-center font-bold text-sm">🍬</div>
               <span className="font-display font-bold text-lg">Couch Buddies</span>
             </div>
             <p className="text-gray-400 text-sm max-w-md leading-relaxed">
-              Premium lifestyle merch for the cozy crew. We believe in comfort, community, and looking good while doing absolutely nothing.
+              Sweet treats & CBD wellness goodies for the cozy crew. Handcrafted with love, lab-tested for quality, and delivered right to your door.
             </p>
           </div>
 
@@ -42,7 +42,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Couch Buddies. All rights reserved.
           </p>
           <p className="text-gray-500 text-xs flex items-center gap-1">
-            Made with <FiHeart size={12} className="text-red-400" /> for the cozy crew
+            Made with <FiHeart size={12} className="text-brand-400" /> and a whole lotta sugar
           </p>
         </div>
       </div>

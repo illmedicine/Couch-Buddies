@@ -21,7 +21,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="w-9 h-9 rounded-lg gradient-brand flex items-center justify-center font-bold text-sm">
-              CB
+              🍬
             </div>
             <span className="font-display font-bold text-lg hidden sm:block group-hover:text-brand-400 transition-colors">
               Couch Buddies

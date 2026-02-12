@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { FiArrowRight, FiShoppingBag, FiTruck, FiShield, FiStar } from 'react-icons/fi'
+import { FiArrowRight, FiShoppingBag, FiTruck, FiShield, FiHeart } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 
 const fadeUp = {
@@ -21,36 +21,38 @@ export default function Landing() {
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Background gradient */}
+        {/* Background gradient — candy pink & mint swirls */}
         <div className="absolute inset-0">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-600/20 rounded-full blur-3xl" />
-          <div className="absolute top-0 left-0 right-0 h-full bg-[radial-gradient(ellipse_at_center,_transparent_0%,_#0A0E17_70%)]" />
+          <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-accent-400/15 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-candy-lavender/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-candy-lemon/10 rounded-full blur-3xl" />
+          <div className="absolute top-0 left-0 right-0 h-full bg-[radial-gradient(ellipse_at_center,_transparent_0%,_#120B0F_70%)]" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-16">
           <motion.div className="text-center max-w-4xl mx-auto" {...fadeUp}>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-sm font-medium mb-8">
-              <FiStar size={14} /> Now Shipping Worldwide
+              🍬 Sweet Treats & Wellness Goodies
             </div>
 
-            <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl font-black leading-[0.9] mb-6">
+            <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl font-bold leading-[0.9] mb-6">
               <span className="gradient-text">COUCH</span>
               <br />
               <span className="text-white">BUDDIES</span>
             </h1>
 
             <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Premium merch for the cozy crew. Designed for comfort, built for style.
-              Rep the brand that gets you.
+              Your favorite candy shop meets wellness. Premium CBD gummies, sweet treats,
+              and herbal goodies — made to help you relax and enjoy the vibe.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/shop" className="btn-primary text-lg px-8 py-4 flex items-center gap-2 group">
-                Shop Now <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+                🍭 Shop Treats <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link to="/auth" className="btn-secondary text-lg px-8 py-4">
-                Join The Crew
+                Join The Sweet Side
               </Link>
             </div>
           </motion.div>
@@ -61,8 +63,8 @@ export default function Landing() {
       <section className="py-20 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
-            <h2 className="font-display text-3xl sm:text-4xl font-bold mb-4">Featured Drops</h2>
-            <p className="text-gray-400 max-w-lg mx-auto">Our latest and greatest. Limited stock, unlimited vibes.</p>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold mb-4">🔥 Hot Picks</h2>
+            <p className="text-gray-400 max-w-lg mx-auto">Our sweetest sellers. Grab them before they melt away.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -97,7 +99,7 @@ export default function Landing() {
 
           <div className="text-center mt-10">
             <Link to="/shop" className="btn-secondary inline-flex items-center gap-2">
-              View All Products <FiArrowRight />
+              View All Goodies <FiArrowRight />
             </Link>
           </div>
         </div>
@@ -108,9 +110,9 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { icon: FiTruck, title: 'Free Delivery', desc: 'Free shipping on orders over $75. Same-day local delivery available.' },
-              { icon: FiShield, title: 'Secure Payments', desc: 'Multiple payment options including CashApp, PayPal, Zelle, and Crypto.' },
-              { icon: FiShoppingBag, title: 'Premium Quality', desc: 'Ethically sourced, sustainably made. Quality you can feel.' },
+              { icon: FiTruck, title: 'Fast Delivery', desc: 'Free shipping on orders over $75. Same-day local delivery so your treats arrive fresh.' },
+              { icon: FiShield, title: 'Lab Tested & Safe', desc: 'All CBD products are third-party lab tested. Multiple payment options: CashApp, PayPal, Zelle, Crypto.' },
+              { icon: FiHeart, title: 'Made With Love', desc: 'Small-batch, hand-crafted goodies. Premium ingredients, natural flavors, real wellness benefits.' },
             ].map((feat, i) => (
               <div key={i} className="glass-card text-center hover:border-brand-500/20 transition-all">
                 <div className="w-14 h-14 rounded-2xl gradient-brand flex items-center justify-center mx-auto mb-4">
@@ -130,9 +132,9 @@ export default function Landing() {
           <div className="glass-card text-center py-16 glow-brand relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-brand-500/10 to-accent-600/10" />
             <div className="relative">
-              <h2 className="font-display text-3xl sm:text-4xl font-bold mb-4">Join the Couch Buddies Crew</h2>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold mb-4">🍬 Get Your Sugar Fix</h2>
               <p className="text-gray-400 max-w-lg mx-auto mb-8">
-                Sign up for exclusive drops, early access, and loyalty rewards. Plus, track your orders and earn points.
+                Join the Couch Buddies fam for exclusive flavors, early drops, and sweet rewards. Track your orders and earn points with every treat.
               </p>
               <Link to="/auth" className="btn-primary text-lg px-8 py-4 inline-flex items-center gap-2">
                 Get Started <FiArrowRight />

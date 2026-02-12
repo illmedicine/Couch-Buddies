@@ -21,9 +21,9 @@ export default function Cart() {
           <div className="glass-card max-w-md mx-auto py-16">
             <FiShoppingBag size={48} className="mx-auto text-gray-500 mb-4" />
             <h2 className="text-2xl font-bold mb-2">Your cart is empty</h2>
-            <p className="text-gray-400 mb-6">Looks like you haven't added anything yet.</p>
+            <p className="text-gray-400 mb-6">Looks like you haven't picked any treats yet!</p>
             <Link to="/shop" className="btn-primary inline-flex items-center gap-2">
-              Start Shopping <FiArrowRight />
+              Browse Treats <FiArrowRight />
             </Link>
           </div>
         </div>
@@ -61,8 +61,8 @@ export default function Cart() {
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-white truncate">{item.name}</h3>
                     <div className="flex gap-2 mt-1">
-                      {item.size && <span className="text-xs text-gray-500">Size: {item.size}</span>}
-                      {item.color && <span className="text-xs text-gray-500">Color: {item.color}</span>}
+                      {item.size && <span className="text-xs text-gray-500">{item.size}</span>}
+                      {item.color && <span className="text-xs text-gray-500">{item.color}</span>}
                     </div>
                     <p className="text-brand-400 font-bold mt-1">${item.price.toFixed(2)}</p>
                   </div>
