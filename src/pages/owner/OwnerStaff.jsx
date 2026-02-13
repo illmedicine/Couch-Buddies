@@ -33,7 +33,12 @@ export default function OwnerStaff() {
     e.preventDefault()
     if (!editingStaff.name || !editingStaff.email) { toast.error('Name and email required'); return }
     if (editingStaff.id) {
-      updateStaff(editingStaff.id, editingStaff)
+      // Auto-update avatar initials when name changes
+      const updatedData = { ...editingStaff }
+      if (updatedData.name) {
+        updatedData.avatar = updatedData.name.split(' ').map(n => n[0]).join('').toUpperCase()
+      }
+      updateStaff(editingStaff.id, updatedData)
       toast.success('Staff updated!')
     } else {
       addStaff(editingStaff)
