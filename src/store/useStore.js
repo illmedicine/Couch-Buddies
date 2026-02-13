@@ -133,13 +133,13 @@ export const useStore = create(
       addStaff: (staffData) => set(state => ({
         staff: [...state.staff, {
           id: generateId(),
-          ...staffData,
-          pin: '0000',
           clockedIn: false,
           clockHistory: [],
           wallet: { balance: 0, transactions: [] },
           location: null,
           createdAt: new Date().toISOString(),
+          ...staffData,
+          avatar: staffData.name ? staffData.name.split(' ').map(n => n[0]).join('').toUpperCase() : '??',
         }]
       })),
 
