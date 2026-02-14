@@ -55,8 +55,16 @@ export default function StaffLayout() {
 
         {/* Staff Info */}
         <div className="px-4 mb-4">
-          <div className="p-3 rounded-xl bg-white/5">
-            <p className="font-medium text-sm">{currentUser?.name}</p>
+          <div className="p-3 rounded-xl bg-white/5 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold bg-brand-500/20 text-brand-400 flex-shrink-0">
+              {currentUser?.photoURL ? (
+                <img src={currentUser.photoURL} alt={currentUser.name} className="w-full h-full object-cover" />
+              ) : (
+                currentUser?.avatar || currentUser?.name?.charAt(0) || '?'
+              )}
+            </div>
+            <div className="min-w-0">
+              <p className="font-medium text-sm truncate">{currentUser?.name}</p>
             <p className="text-xs text-gray-400 mt-0.5">
               {currentUser?.clockedIn ? (
                 <span className="text-emerald-400">● Clocked In — {currentUser?.clockType || currentUser?.role}</span>
@@ -64,6 +72,7 @@ export default function StaffLayout() {
                 <span className="text-gray-500">○ Not clocked in</span>
               )}
             </p>
+            </div>
           </div>
         </div>
 

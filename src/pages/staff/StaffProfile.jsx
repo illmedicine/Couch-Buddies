@@ -3,6 +3,7 @@ import { useStore } from '../../store/useStore'
 import { FiSave, FiUser, FiMail, FiPhone, FiLock, FiEdit2, FiBriefcase } from 'react-icons/fi'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
+import ProfilePhotoUpload from '../../components/ProfilePhotoUpload'
 
 export default function StaffProfile() {
   const { currentUser, staff, updateStaff } = useStore()
@@ -91,13 +92,20 @@ export default function StaffProfile() {
       >
         {/* Avatar & Header */}
         <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/10">
-          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-bold ${
-            me?.clockedIn
-              ? 'bg-gradient-to-br from-emerald-500 to-emerald-700 ring-2 ring-emerald-500/30'
-              : 'bg-gradient-to-br from-brand-500 to-brand-700'
-          }`}>
-            {me?.avatar || me?.name?.charAt(0) || '?'}
-          </div>
+          <ProfilePhotoUpload
+            currentPhotoURL={me?.photoURL}
+            fallbackInitials={me?.avatar || me?.name?.charAt(0) || '?'}
+            storagePath={`staff-${me?.id || 'unknown'}`}
+            onUploadComplete={(url) => {
+              updateStaff(me.id, { photoURL: url })
+              useStore.setState(state => ({
+                currentUser: { ...state.currentUser, photoURL: url },
+              }))
+            }}
+            gradientClass={me?.clockedIn ? 'from-emerald-500 to-emerald-700' : 'from-brand-500 to-brand-700'}
+            editable={true}
+            size="lg"
+          />
           <div>
             <h2 className="text-xl font-bold">{me?.name}</h2>
             <div className="flex items-center gap-2 mt-0.5">

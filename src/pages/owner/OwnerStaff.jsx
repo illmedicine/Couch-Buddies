@@ -101,12 +101,16 @@ export default function OwnerStaff() {
           <motion.div key={member.id} layout className="glass-card hover:border-white/20 transition-all">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold ${
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold overflow-hidden ${
                   member.clockedIn
                     ? 'bg-emerald-500/20 text-emerald-400 ring-2 ring-emerald-500/30'
                     : 'bg-surface-700 text-gray-400'
                 }`}>
-                  {member.avatar || member.name.split(' ').map(n => n[0]).join('')}
+                  {member.photoURL ? (
+                    <img src={member.photoURL} alt={member.name} className="w-full h-full object-cover" />
+                  ) : (
+                    member.avatar || member.name.split(' ').map(n => n[0]).join('')
+                  )}
                 </div>
                 <div>
                   <h3 className="font-semibold">{member.name}</h3>
@@ -230,8 +234,12 @@ export default function OwnerStaff() {
               </div>
               <form onSubmit={handlePay} className="p-6 space-y-4">
                 <div className="p-4 rounded-xl bg-white/5 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-accent-500/20 text-accent-400 flex items-center justify-center font-bold text-sm">
-                    {payTarget.avatar || payTarget.name.charAt(0)}
+                  <div className="w-10 h-10 rounded-full bg-accent-500/20 text-accent-400 flex items-center justify-center font-bold text-sm overflow-hidden">
+                    {payTarget.photoURL ? (
+                      <img src={payTarget.photoURL} alt={payTarget.name} className="w-full h-full object-cover" />
+                    ) : (
+                      payTarget.avatar || payTarget.name.charAt(0)
+                    )}
                   </div>
                   <div>
                     <p className="font-medium">{payTarget.name}</p>

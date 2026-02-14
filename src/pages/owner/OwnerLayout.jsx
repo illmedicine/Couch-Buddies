@@ -17,7 +17,7 @@ const navItems = [
 ]
 
 export default function OwnerLayout() {
-  const { logout } = useStore()
+  const { logout, ownerProfile } = useStore()
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -35,8 +35,12 @@ export default function OwnerLayout() {
         {/* Logo */}
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-600 to-accent-800 flex items-center justify-center font-bold text-sm">
-              CB
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-600 to-accent-800 flex items-center justify-center font-bold text-sm overflow-hidden">
+              {ownerProfile?.photoURL ? (
+                <img src={ownerProfile.photoURL} alt="Owner" className="w-full h-full object-cover" />
+              ) : (
+                'CB'
+              )}
             </div>
             <div>
               <span className="font-display font-bold text-sm">Couch Buddies</span>

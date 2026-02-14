@@ -88,8 +88,12 @@ export default function OrderTracking() {
               <div className="glass-card">
                 <h3 className="font-semibold mb-4">Your Delivery Driver</h3>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full gradient-brand flex items-center justify-center font-bold">
-                    {driver.avatar || driver.name.charAt(0)}
+                  <div className="w-12 h-12 rounded-full gradient-brand flex items-center justify-center font-bold overflow-hidden">
+                    {driver.photoURL ? (
+                      <img src={driver.photoURL} alt={driver.name} className="w-full h-full object-cover" />
+                    ) : (
+                      driver.avatar || driver.name.charAt(0)
+                    )}
                   </div>
                   <div>
                     <p className="font-medium">{driver.name}</p>

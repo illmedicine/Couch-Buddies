@@ -117,10 +117,14 @@ export default function OwnerDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {staff.map(member => (
             <div key={member.id} className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold overflow-hidden ${
                 member.clockedIn ? 'bg-emerald-500/20 text-emerald-400 ring-2 ring-emerald-500/30' : 'bg-gray-500/20 text-gray-400'
               }`}>
-                {member.avatar || member.name.charAt(0)}
+                {member.photoURL ? (
+                  <img src={member.photoURL} alt={member.name} className="w-full h-full object-cover" />
+                ) : (
+                  member.avatar || member.name.charAt(0)
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{member.name}</p>

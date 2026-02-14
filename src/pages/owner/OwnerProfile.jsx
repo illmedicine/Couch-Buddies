@@ -3,6 +3,7 @@ import { useStore } from '../../store/useStore'
 import { FiSave, FiUser, FiMail, FiPhone, FiLock, FiHome, FiMapPin, FiEdit2 } from 'react-icons/fi'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
+import ProfilePhotoUpload from '../../components/ProfilePhotoUpload'
 
 export default function OwnerProfile() {
   const { ownerProfile, updateOwnerProfile } = useStore()
@@ -66,9 +67,15 @@ export default function OwnerProfile() {
       >
         {/* Avatar & Header */}
         <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/10">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-600 to-accent-800 flex items-center justify-center text-xl font-bold">
-            {ownerProfile.avatar || 'CB'}
-          </div>
+          <ProfilePhotoUpload
+            currentPhotoURL={ownerProfile.photoURL}
+            fallbackInitials={ownerProfile.avatar || 'CB'}
+            storagePath={`owner-${ownerProfile.id || '1'}`}
+            onUploadComplete={(url) => updateOwnerProfile({ photoURL: url })}
+            gradientClass="from-accent-600 to-accent-800"
+            editable={true}
+            size="lg"
+          />
           <div>
             <h2 className="text-xl font-bold">{ownerProfile.name}</h2>
             <p className="text-sm text-accent-400">{ownerProfile.businessName || 'Couch Buddies'}</p>
