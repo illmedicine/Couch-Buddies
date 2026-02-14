@@ -2,7 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/useStore'
 import {
   FiGrid, FiBox, FiUsers, FiShoppingCart, FiDollarSign,
-  FiFileText, FiLogOut, FiMenu, FiX
+  FiFileText, FiLogOut, FiMenu, FiX, FiSettings
 } from 'react-icons/fi'
 import { useState } from 'react'
 
@@ -13,6 +13,7 @@ const navItems = [
   { to: '/owner/orders', icon: FiShoppingCart, label: 'Orders' },
   { to: '/owner/treasury', icon: FiDollarSign, label: 'Treasury' },
   { to: '/owner/ledger', icon: FiFileText, label: 'Ledger' },
+  { to: '/owner/profile', icon: FiSettings, label: 'Profile' },
 ]
 
 export default function OwnerLayout() {

@@ -20,6 +20,7 @@ import OwnerStaff from './pages/owner/OwnerStaff'
 import OwnerOrders from './pages/owner/OwnerOrders'
 import OwnerTreasury from './pages/owner/OwnerTreasury'
 import OwnerLedger from './pages/owner/OwnerLedger'
+import OwnerProfile from './pages/owner/OwnerProfile'
 
 // Staff
 import StaffLogin from './pages/StaffLogin'
@@ -65,6 +66,7 @@ export default function App() {
         <Route path="orders" element={<OwnerOrders />} />
         <Route path="treasury" element={<OwnerTreasury />} />
         <Route path="ledger" element={<OwnerLedger />} />
+        <Route path="profile" element={<OwnerProfile />} />
       </Route>
 
       {/* Staff Routes */}

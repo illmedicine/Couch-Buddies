@@ -15,6 +15,7 @@ const SHARED_KEYS = [
   'messages',
   'inStoreSales',
   'customers',
+  'ownerProfile',
 ]
 
 // ─── Default shared state used when Firebase is empty (first-time seed) ───
@@ -38,6 +39,17 @@ const DEFAULT_SHARED_STATE = {
   ],
   inStoreSales: [],
   customers: [],
+  ownerProfile: {
+    id: 'owner-1',
+    name: 'Owner',
+    email: 'owner@couchbuddies.com',
+    phone: '',
+    businessName: 'Couch Buddies',
+    businessAddress: '',
+    pin: '1234',
+    avatar: 'CB',
+    createdAt: '2026-01-01T00:00:00Z',
+  },
 }
 
 // ─── Helpers ───
@@ -59,6 +71,7 @@ function restoreDefaults(key, value) {
     inStoreSales: [],
     customers: [],
     treasury: { balance: 0, accounts: [], transactions: [] },
+    ownerProfile: { id: 'owner-1', name: 'Owner', email: 'owner@couchbuddies.com', phone: '', businessName: 'Couch Buddies', businessAddress: '', pin: '1234', avatar: 'CB', createdAt: '2026-01-01T00:00:00Z' },
   }
   return defaults[key] ?? null
 }

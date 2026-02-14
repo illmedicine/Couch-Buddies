@@ -15,6 +15,32 @@ export const useStore = create(
       // ─── Firebase sync readiness ───
       _firebaseReady: false,
 
+      // ─── Owner Profile (synced via Firebase) ───
+      ownerProfile: {
+        id: 'owner-1',
+        name: 'Owner',
+        email: 'owner@couchbuddies.com',
+        phone: '',
+        businessName: 'Couch Buddies',
+        businessAddress: '',
+        pin: '1234',
+        avatar: 'CB',
+        createdAt: '2026-01-01T00:00:00Z',
+      },
+
+      updateOwnerProfile: (updates) => set(state => {
+        const newProfile = { ...state.ownerProfile, ...updates }
+        // Auto-update avatar from name initials
+        if (updates.name) {
+          newProfile.avatar = updates.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'CB'
+        }
+        // If owner is currently logged in, update currentUser too
+        const newCurrentUser = state.userRole === 'owner' && state.currentUser
+          ? { ...state.currentUser, name: newProfile.name, email: newProfile.email, phone: newProfile.phone }
+          : state.currentUser
+        return { ownerProfile: newProfile, currentUser: newCurrentUser }
+      }),
+
       // ─── Auth State ───
       currentUser: null,
       userRole: null, // 'customer' | 'owner' | 'staff'
@@ -25,8 +51,18 @@ export const useStore = create(
         userRole: 'customer'
       }),
       loginAsOwner: (pin) => {
-        if (pin === '1234') {
-          set({ currentUser: { id: 'owner-1', name: 'Owner', email: 'owner@couchbuddies.com', role: 'owner' }, userRole: 'owner' })
+        const profile = get().ownerProfile
+        if (pin === (profile.pin || '1234')) {
+          set({
+            currentUser: {
+              id: profile.id || 'owner-1',
+              name: profile.name || 'Owner',
+              email: profile.email || 'owner@couchbuddies.com',
+              phone: profile.phone || '',
+              role: 'owner',
+            },
+            userRole: 'owner',
+          })
           return true
         }
         return false
@@ -326,6 +362,17 @@ export const useStore = create(
           messages: [],
           inStoreSales: [],
           customers: [],
+          ownerProfile: {
+            id: 'owner-1',
+            name: 'Owner',
+            email: 'owner@couchbuddies.com',
+            phone: '',
+            businessName: 'Couch Buddies',
+            businessAddress: '',
+            pin: '1234',
+            avatar: 'CB',
+            createdAt: '2026-01-01T00:00:00Z',
+          },
           treasury: {
             balance: 50000,
             accounts: [
