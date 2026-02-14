@@ -2,7 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/useStore'
 import {
   FiGrid, FiMessageSquare, FiDollarSign, FiLogOut, FiMenu, FiX,
-  FiTruck, FiShoppingBag
+  FiTruck, FiShoppingBag, FiUser
 } from 'react-icons/fi'
 import { useState } from 'react'
 
@@ -24,6 +24,7 @@ export default function StaffLayout() {
       : []),
     { to: '/staff/chat', icon: FiMessageSquare, label: 'Team Chat' },
     { to: '/staff/wallet', icon: FiDollarSign, label: 'My Wallet' },
+    { to: '/staff/profile', icon: FiUser, label: 'My Profile' },
   ]
 
   const handleLogout = () => {

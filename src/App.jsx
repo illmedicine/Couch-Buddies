@@ -30,6 +30,7 @@ import StaffChat from './pages/staff/StaffChat'
 import StaffWallet from './pages/staff/StaffWallet'
 import DeliveryMode from './pages/staff/DeliveryMode'
 import InStoreMode from './pages/staff/InStoreMode'
+import StaffProfile from './pages/staff/StaffProfile'
 
 function ProtectedRoute({ children, requiredRole }) {
   const { currentUser, userRole } = useStore()
@@ -81,6 +82,7 @@ export default function App() {
         <Route path="wallet" element={<StaffWallet />} />
         <Route path="delivery" element={<DeliveryMode />} />
         <Route path="instore" element={<InStoreMode />} />
+        <Route path="profile" element={<StaffProfile />} />
       </Route>
 
       {/* Fallback */}
