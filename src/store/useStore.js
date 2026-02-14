@@ -357,6 +357,34 @@ export const useStore = create(
         userRole: state.userRole,
         cart: state.cart,
       }),
+      // Migrate from v1 (full localStorage) → v2 (local-only + Firebase)
+      // Before stripping shared keys, back them up so FirebaseSync can recover them.
+      migrate: (persistedState, version) => {
+        if (version < 2 && persistedState) {
+          // Save a backup of the old full state for FirebaseSync migration
+          try {
+            const backupKeys = ['products', 'staff', 'orders', 'treasury', 'messages', 'inStoreSales', 'customers']
+            const backup = {}
+            let hasData = false
+            for (const key of backupKeys) {
+              if (persistedState[key] !== undefined) {
+                backup[key] = persistedState[key]
+                hasData = true
+              }
+            }
+            if (hasData) {
+              localStorage.setItem('couch-buddies-v1-backup', JSON.stringify(backup))
+            }
+          } catch (e) {
+            console.warn('Failed to backup v1 state:', e)
+          }
+        }
+        return {
+          currentUser: persistedState?.currentUser ?? null,
+          userRole: persistedState?.userRole ?? null,
+          cart: persistedState?.cart ?? [],
+        }
+      },
     }
   )
 )
