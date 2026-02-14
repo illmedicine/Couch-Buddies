@@ -4,10 +4,12 @@ import { HashRouter } from 'react-router-dom'
 import App from './App'
 import './index.css'
 import { Toaster } from 'react-hot-toast'
+import { FirebaseSync } from './store/firebaseSync'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <HashRouter>
+      <FirebaseSync />
       <App />
       <Toaster
         position="top-right"

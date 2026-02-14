@@ -1,6 +1,10 @@
-// Zustand store for global state management with localStorage persistence
+// Zustand store for global state management
+// Shared data (products, staff, orders, etc.) synced via Firebase Realtime Database
+// Local session data (cart, auth) persisted in localStorage
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { ref, set as fbSet } from 'firebase/database'
+import { db } from '../firebase'
 import { seedProducts, seedStaff } from './seedData'
 
 const generateId = () => Math.random().toString(36).substr(2, 9) + Date.now().toString(36)
@@ -8,6 +12,9 @@ const generateId = () => Math.random().toString(36).substr(2, 9) + Date.now().to
 export const useStore = create(
   persist(
     (set, get) => ({
+      // ─── Firebase sync readiness ───
+      _firebaseReady: false,
+
       // ─── Auth State ───
       currentUser: null,
       userRole: null, // 'customer' | 'owner' | 'staff'
@@ -311,26 +318,45 @@ export const useStore = create(
       })),
 
       // ─── Reset ───
-      resetStore: () => set({
-        products: seedProducts,
-        staff: seedStaff,
-        cart: [],
-        orders: [],
-        messages: [],
-        inStoreSales: [],
-        customers: [],
-        currentUser: null,
-        userRole: null,
-        treasury: {
-          balance: 50000,
-          accounts: [],
-          transactions: [],
-        },
-      }),
+      resetStore: () => {
+        const seedState = {
+          products: seedProducts,
+          staff: seedStaff,
+          orders: [],
+          messages: [],
+          inStoreSales: [],
+          customers: [],
+          treasury: {
+            balance: 50000,
+            accounts: [
+              { id: 'acc-1', name: 'Business Checking', type: 'bank', last4: '4521', connected: true },
+              { id: 'acc-2', name: 'Business Debit', type: 'debit', last4: '8832', connected: true },
+            ],
+            transactions: [
+              { id: 't1', type: 'deposit', amount: 50000, note: 'Initial funding', time: '2026-01-01T00:00:00Z', from: 'Bank Transfer' },
+            ],
+          },
+        }
+        // Write seed data to Firebase so all clients reset
+        fbSet(ref(db, 'store'), JSON.parse(JSON.stringify(seedState)))
+        set({
+          ...seedState,
+          cart: [],
+          currentUser: null,
+          userRole: null,
+        })
+      },
     }),
     {
       name: 'couch-buddies-store',
-      version: 1,
+      version: 2,
+      // Only persist local/session data in localStorage.
+      // All shared data (products, staff, orders, treasury, etc.) lives in Firebase.
+      partialize: (state) => ({
+        currentUser: state.currentUser,
+        userRole: state.userRole,
+        cart: state.cart,
+      }),
     }
   )
 )
