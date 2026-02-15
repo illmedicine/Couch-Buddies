@@ -295,7 +295,8 @@ export default function Checkout() {
               {cart.map(item => (
                 <div key={item.id} className="flex gap-3">
                   <div className="w-12 h-12 rounded-lg overflow-hidden bg-surface-800 flex-shrink-0">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover"
+                      onError={(e) => { e.target.src = 'https://via.placeholder.com/100?text=?' }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{item.name}</p>

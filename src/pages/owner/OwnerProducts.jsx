@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useStore } from '../../store/useStore'
-import { FiPlus, FiEdit2, FiTrash2, FiImage, FiSearch, FiX, FiSave, FiGrid, FiList } from 'react-icons/fi'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { storage } from '../../firebase'
+import { FiPlus, FiEdit2, FiTrash2, FiImage, FiSearch, FiX, FiSave, FiGrid, FiList, FiLoader } from 'react-icons/fi'
 import toast from 'react-hot-toast'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -11,6 +13,7 @@ export default function OwnerProducts() {
   const [editingProduct, setEditingProduct] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [viewMode, setViewMode] = useState('grid')
+  const [uploadingIndex, setUploadingIndex] = useState(-1)
 
   const categories = ['All', ...new Set(products.map(p => p.category))]
   const filtered = products.filter(p => {
@@ -61,16 +64,37 @@ export default function OwnerProducts() {
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = 'image/*'
-    input.onchange = (e) => {
+    input.onchange = async (e) => {
       const file = e.target.files[0]
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = (ev) => {
-          const imgs = [...editingProduct.images]
-          imgs[index] = ev.target.result
-          setEditingProduct({ ...editingProduct, images: imgs })
-        }
-        reader.readAsDataURL(file)
+      if (!file) return
+
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please select an image file')
+        return
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image must be under 5 MB')
+        return
+      }
+
+      setUploadingIndex(index)
+      try {
+        const ext = file.name.split('.').pop()
+        const filename = `product_${Date.now()}_${index}.${ext}`
+        const storageRef = ref(storage, `products/${filename}`)
+
+        await uploadBytes(storageRef, file)
+        const downloadURL = await getDownloadURL(storageRef)
+
+        const imgs = [...editingProduct.images]
+        imgs[index] = downloadURL
+        setEditingProduct({ ...editingProduct, images: imgs })
+        toast.success('Image uploaded!')
+      } catch (err) {
+        console.error('Product image upload failed:', err)
+        toast.error('Failed to upload image. Check Firebase Storage settings.')
+      } finally {
+        setUploadingIndex(-1)
       }
     }
     input.click()
@@ -132,6 +156,7 @@ export default function OwnerProducts() {
                   src={product.images?.[0] || 'https://via.placeholder.com/400?text=No+Image'}
                   alt={product.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  onError={(e) => { e.target.src = 'https://via.placeholder.com/400?text=Image+Error' }}
                 />
                 {product.featured && (
                   <span className="absolute top-3 left-3 badge-brand text-xs">Featured</span>
@@ -171,7 +196,8 @@ export default function OwnerProducts() {
                 <tr key={product.id} className="table-row">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <img src={product.images?.[0] || ''} alt="" className="w-10 h-10 rounded-lg object-cover bg-surface-800" />
+                      <img src={product.images?.[0] || ''} alt="" className="w-10 h-10 rounded-lg object-cover bg-surface-800"
+                        onError={(e) => { e.target.src = 'https://via.placeholder.com/40?text=?' }} />
                       <div>
                         <p className="text-sm font-medium">{product.name}</p>
                         {product.featured && <span className="badge-brand text-xs mt-0.5">Featured</span>}
@@ -223,10 +249,16 @@ export default function OwnerProducts() {
                   <div className="grid grid-cols-3 gap-3">
                     {editingProduct.images.map((img, idx) => (
                       <div key={idx} className="aspect-square rounded-xl border-2 border-dashed border-white/10 overflow-hidden relative group cursor-pointer hover:border-brand-500/50 transition-colors"
-                        onClick={() => handleImageUpload(idx)}>
-                        {img ? (
+                        onClick={() => uploadingIndex === -1 && handleImageUpload(idx)}>
+                        {uploadingIndex === idx ? (
+                          <div className="w-full h-full flex flex-col items-center justify-center text-brand-400 bg-surface-800">
+                            <FiLoader size={24} className="animate-spin" />
+                            <span className="text-xs mt-2 text-gray-400">Uploading...</span>
+                          </div>
+                        ) : img ? (
                           <>
-                            <img src={img} alt="" className="w-full h-full object-cover" />
+                            <img src={img} alt="" className="w-full h-full object-cover"
+                              onError={(e) => { e.target.src = 'https://via.placeholder.com/400?text=Image+Error' }} />
                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                               <FiImage size={20} />
                             </div>

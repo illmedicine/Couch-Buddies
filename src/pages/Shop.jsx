@@ -123,6 +123,7 @@ export default function Shop() {
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
+                        onError={(e) => { e.target.src = 'https://via.placeholder.com/400?text=No+Image' }}
                       />
                       {product.featured && (
                         <span className="absolute top-3 left-3 badge-brand">Featured</span>
@@ -159,7 +160,8 @@ export default function Shop() {
                   <div className="glass-card p-0 overflow-hidden hover:border-brand-500/30 transition-all flex">
                     <div className="w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 overflow-hidden bg-surface-800">
                       <img src={product.images[0]} alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => { e.target.src = 'https://via.placeholder.com/400?text=No+Image' }} />
                     </div>
                     <div className="p-4 flex-1 flex flex-col justify-center">
                       <p className="text-xs text-gray-500 uppercase tracking-wider">{product.category}</p>
