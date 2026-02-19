@@ -7,6 +7,8 @@ import { FiShoppingCart, FiArrowLeft, FiMinus, FiPlus, FiCheck } from 'react-ico
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
 
+const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' fill='%231a1a2e'%3E%3Crect width='600' height='600'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='18'%3EImage Unavailable%3C/text%3E%3C/svg%3E"
+
 export default function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -62,8 +64,9 @@ export default function ProductDetail() {
           {/* Image */}
           <div className="glass-card p-0 overflow-hidden">
             <div className="aspect-square bg-surface-800">
-              <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover"
-                onError={(e) => { e.target.src = 'https://via.placeholder.com/600?text=Image+Unavailable' }} />
+              <img src={product.images?.[0] || PLACEHOLDER_IMG} alt={product.name} className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+                onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_IMG } }} />
             </div>
           </div>
 

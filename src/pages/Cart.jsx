@@ -5,6 +5,8 @@ import Footer from '../components/Footer'
 import { FiTrash2, FiMinus, FiPlus, FiShoppingBag, FiArrowRight } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 
+const PLACEHOLDER_SM = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%231a1a2e'%3E%3Crect width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='12'%3E?%3C/text%3E%3C/svg%3E"
+
 export default function Cart() {
   const { cart, updateCartItem, removeFromCart, clearCart } = useStore()
 
@@ -57,7 +59,8 @@ export default function Cart() {
                 <div className="flex gap-4 p-4">
                   <div className="w-24 h-24 rounded-xl overflow-hidden bg-surface-800 flex-shrink-0">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover"
-                      onError={(e) => { e.target.src = 'https://via.placeholder.com/100?text=?' }} />
+                      referrerPolicy="no-referrer"
+                      onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_SM } }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-white truncate">{item.name}</h3>

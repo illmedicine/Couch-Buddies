@@ -1,10 +1,40 @@
 // Reusable profile photo upload component
-// Uploads to Firebase Storage, returns download URL for database persistence
+// Compresses images client-side and returns base64 data URI for database persistence
 import { useState, useRef } from 'react'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { storage } from '../firebase'
 import { FiCamera, FiLoader } from 'react-icons/fi'
 import toast from 'react-hot-toast'
+
+// Compress and resize an image file to a base64 data URI
+function compressImage(file, maxSize = 200, quality = 0.75) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const img = new Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        let { width, height } = img
+        if (width > maxSize || height > maxSize) {
+          if (width > height) {
+            height = Math.round((height * maxSize) / width)
+            width = maxSize
+          } else {
+            width = Math.round((width * maxSize) / height)
+            height = maxSize
+          }
+        }
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0, width, height)
+        resolve(canvas.toDataURL('image/jpeg', quality))
+      }
+      img.onerror = reject
+      img.src = e.target.result
+    }
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+}
 
 /**
  * ProfilePhotoUpload
@@ -50,20 +80,14 @@ export default function ProfilePhotoUpload({
 
     setUploading(true)
     try {
-      // Create a unique filename with timestamp
-      const ext = file.name.split('.').pop()
-      const filename = `${storagePath}_${Date.now()}.${ext}`
-      const storageRef = ref(storage, `profiles/${filename}`)
+      // Compress image client-side and convert to base64 data URI
+      const dataURL = await compressImage(file, 200, 0.75)
 
-      // Upload
-      await uploadBytes(storageRef, file)
-      const downloadURL = await getDownloadURL(storageRef)
-
-      onUploadComplete(downloadURL)
+      onUploadComplete(dataURL)
       toast.success('Photo updated!')
     } catch (err) {
       console.error('Upload failed:', err)
-      toast.error('Failed to upload photo. Make sure Firebase Storage is enabled.')
+      toast.error('Failed to process photo.')
     } finally {
       setUploading(false)
       // Reset input so same file can be re-selected

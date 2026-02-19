@@ -7,6 +7,8 @@ import { FiCheck, FiCreditCard, FiDollarSign, FiSmartphone } from 'react-icons/f
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
 
+const PLACEHOLDER_SM = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%231a1a2e'%3E%3Crect width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='12'%3E?%3C/text%3E%3C/svg%3E"
+
 const paymentMethods = [
   { id: 'card', name: 'Credit/Debit Card', icon: FiCreditCard, color: 'text-blue-400' },
   { id: 'cashapp', name: 'CashApp', icon: FiDollarSign, color: 'text-green-400' },
@@ -296,7 +298,8 @@ export default function Checkout() {
                 <div key={item.id} className="flex gap-3">
                   <div className="w-12 h-12 rounded-lg overflow-hidden bg-surface-800 flex-shrink-0">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover"
-                      onError={(e) => { e.target.src = 'https://via.placeholder.com/100?text=?' }} />
+                      referrerPolicy="no-referrer"
+                      onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_SM } }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{item.name}</p>

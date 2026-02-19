@@ -5,6 +5,8 @@ import Footer from '../components/Footer'
 import { FiArrowRight, FiShoppingBag, FiTruck, FiShield, FiHeart } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 
+const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' fill='%231a1a2e'%3E%3Crect width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='16'%3ENo Image%3C/text%3E%3C/svg%3E"
+
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
   animate: { opacity: 1, y: 0 },
@@ -79,11 +81,12 @@ export default function Landing() {
                   <div className="glass-card p-0 overflow-hidden hover:border-brand-500/30 transition-all duration-300 hover:-translate-y-1">
                     <div className="aspect-square overflow-hidden bg-surface-800">
                       <img
-                        src={product.images[0]}
+                        src={product.images?.[0] || PLACEHOLDER_IMG}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
-                        onError={(e) => { e.target.src = 'https://via.placeholder.com/400?text=No+Image' }}
+                        referrerPolicy="no-referrer"
+                        onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_IMG } }}
                       />
                     </div>
                     <div className="p-4">

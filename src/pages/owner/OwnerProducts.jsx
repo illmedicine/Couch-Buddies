@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useStore } from '../../store/useStore'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { storage } from '../../firebase'
 import { FiPlus, FiEdit2, FiTrash2, FiImage, FiSearch, FiX, FiSave, FiGrid, FiList, FiLoader } from 'react-icons/fi'
+
+// Reliable inline SVG placeholder (no external dependency)
+const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' fill='%231a1a2e'%3E%3Crect width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='16'%3ENo Image%3C/text%3E%3C/svg%3E"
+const PLACEHOLDER_SM = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' fill='%231a1a2e'%3E%3Crect width='40' height='40'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='10'%3E?%3C/text%3E%3C/svg%3E"
 import toast from 'react-hot-toast'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -79,25 +81,55 @@ export default function OwnerProducts() {
 
       setUploadingIndex(index)
       try {
-        const ext = file.name.split('.').pop()
-        const filename = `product_${Date.now()}_${index}.${ext}`
-        const storageRef = ref(storage, `products/${filename}`)
-
-        await uploadBytes(storageRef, file)
-        const downloadURL = await getDownloadURL(storageRef)
+        // Compress image client-side and convert to base64 data URI
+        // This stores images directly in the database, bypassing Firebase Storage CORS issues
+        const dataURL = await compressImage(file, 800, 0.75)
 
         const imgs = [...editingProduct.images]
-        imgs[index] = downloadURL
+        imgs[index] = dataURL
         setEditingProduct({ ...editingProduct, images: imgs })
         toast.success('Image uploaded!')
       } catch (err) {
-        console.error('Product image upload failed:', err)
-        toast.error('Failed to upload image. Check Firebase Storage settings.')
+        console.error('Product image processing failed:', err)
+        toast.error('Failed to process image')
       } finally {
         setUploadingIndex(-1)
       }
     }
     input.click()
+  }
+
+  // Compress and resize an image file to a base64 data URI
+  function compressImage(file, maxSize = 800, quality = 0.75) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          let { width, height } = img
+          // Scale down to maxSize while preserving aspect ratio
+          if (width > maxSize || height > maxSize) {
+            if (width > height) {
+              height = Math.round((height * maxSize) / width)
+              width = maxSize
+            } else {
+              width = Math.round((width * maxSize) / height)
+              height = maxSize
+            }
+          }
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, width, height)
+          resolve(canvas.toDataURL('image/jpeg', quality))
+        }
+        img.onerror = reject
+        img.src = e.target.result
+      }
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
   }
 
   return (
@@ -153,10 +185,11 @@ export default function OwnerProducts() {
             <motion.div key={product.id} layout className="glass-card p-0 overflow-hidden group">
               <div className="aspect-square bg-surface-800 relative overflow-hidden">
                 <img
-                  src={product.images?.[0] || 'https://via.placeholder.com/400?text=No+Image'}
+                  src={product.images?.[0] || PLACEHOLDER_IMG}
                   alt={product.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/400?text=Image+Error' }}
+                  referrerPolicy="no-referrer"
+                  onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_IMG } }}
                 />
                 {product.featured && (
                   <span className="absolute top-3 left-3 badge-brand text-xs">Featured</span>
@@ -197,7 +230,7 @@ export default function OwnerProducts() {
                   <td className="p-4">
                     <div className="flex items-center gap-3">
                       <img src={product.images?.[0] || ''} alt="" className="w-10 h-10 rounded-lg object-cover bg-surface-800"
-                        onError={(e) => { e.target.src = 'https://via.placeholder.com/40?text=?' }} />
+                        onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_SM } }} />
                       <div>
                         <p className="text-sm font-medium">{product.name}</p>
                         {product.featured && <span className="badge-brand text-xs mt-0.5">Featured</span>}
@@ -258,7 +291,7 @@ export default function OwnerProducts() {
                         ) : img ? (
                           <>
                             <img src={img} alt="" className="w-full h-full object-cover"
-                              onError={(e) => { e.target.src = 'https://via.placeholder.com/400?text=Image+Error' }} />
+                              onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_IMG } }} />
                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                               <FiImage size={20} />
                             </div>

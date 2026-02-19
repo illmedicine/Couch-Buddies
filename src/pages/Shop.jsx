@@ -6,6 +6,8 @@ import Footer from '../components/Footer'
 import { FiSearch, FiFilter, FiGrid, FiList } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 
+const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' fill='%231a1a2e'%3E%3Crect width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='16'%3ENo Image%3C/text%3E%3C/svg%3E"
+
 export default function Shop() {
   const { products } = useStore()
   const [search, setSearch] = useState('')
@@ -119,11 +121,12 @@ export default function Shop() {
                   <div className="glass-card p-0 overflow-hidden hover:border-brand-500/30 transition-all duration-300 hover:-translate-y-1">
                     <div className="aspect-square overflow-hidden bg-surface-800 relative">
                       <img
-                        src={product.images[0]}
+                        src={product.images?.[0] || PLACEHOLDER_IMG}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
-                        onError={(e) => { e.target.src = 'https://via.placeholder.com/400?text=No+Image' }}
+                        referrerPolicy="no-referrer"
+                        onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_IMG } }}
                       />
                       {product.featured && (
                         <span className="absolute top-3 left-3 badge-brand">Featured</span>
@@ -159,9 +162,10 @@ export default function Shop() {
                 <Link to={`/product/${product.id}`} className="group block">
                   <div className="glass-card p-0 overflow-hidden hover:border-brand-500/30 transition-all flex">
                     <div className="w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 overflow-hidden bg-surface-800">
-                      <img src={product.images[0]} alt={product.name}
+                      <img src={product.images?.[0] || PLACEHOLDER_IMG} alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => { e.target.src = 'https://via.placeholder.com/400?text=No+Image' }} />
+                        referrerPolicy="no-referrer"
+                        onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_IMG } }} />
                     </div>
                     <div className="p-4 flex-1 flex flex-col justify-center">
                       <p className="text-xs text-gray-500 uppercase tracking-wider">{product.category}</p>
