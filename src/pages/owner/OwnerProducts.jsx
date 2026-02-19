@@ -24,7 +24,7 @@ export default function OwnerProducts() {
   })
 
   const emptyProduct = {
-    name: '', description: '', price: '', category: 'T-Shirts',
+    name: '', description: '', price: '', category: 'Flowers',
     sizes: ['S', 'M', 'L', 'XL'], colors: ['Black'], stock: '',
     featured: false, images: [''],
   }
@@ -305,7 +305,7 @@ export default function OwnerProducts() {
                     <select value={editingProduct.category}
                       onChange={e => setEditingProduct({ ...editingProduct, category: e.target.value })}
                       className="input-field">
-                      {['CBD Gummies', 'Tinctures', 'Chocolates', 'Hard Candy', 'Beverages', 'Topicals', 'Limited Edition'].map(c => (
+                      {['Flowers', 'Pens', 'EdIBLES', 'Merch'].map(c => (
                         <option key={c} value={c} className="bg-surface-800">{c}</option>
                       ))}
                     </select>
