@@ -1,8 +1,6 @@
 // Reusable profile photo upload component
-// Uploads to Firebase Storage, returns download URL for database persistence
+// Stores profile photos as Base64 in Firebase Database to avoid CORS issues
 import { useState, useRef } from 'react'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { storage } from '../firebase'
 import { FiCamera, FiLoader } from 'react-icons/fi'
 import toast from 'react-hot-toast'
 
@@ -50,22 +48,26 @@ export default function ProfilePhotoUpload({
 
     setUploading(true)
     try {
-      // Create a unique filename with timestamp
-      const ext = file.name.split('.').pop()
-      const filename = `${storagePath}_${Date.now()}.${ext}`
-      const storageRef = ref(storage, `profiles/${filename}`)
-
-      // Upload
-      await uploadBytes(storageRef, file)
-      const downloadURL = await getDownloadURL(storageRef)
-
-      onUploadComplete(downloadURL)
-      toast.success('Photo updated!')
+      // Read file as Base64 Data URL
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const dataUrl = event.target.result
+        // Call the callback with the base64 data URL
+        // This will be stored directly in the database
+        onUploadComplete(dataUrl)
+        toast.success('Photo updated!')
+        setUploading(false)
+      }
+      reader.onerror = () => {
+        toast.error('Failed to read file')
+        setUploading(false)
+      }
+      reader.readAsDataURL(file)
     } catch (err) {
       console.error('Upload failed:', err)
-      toast.error('Failed to upload photo. Make sure Firebase Storage is enabled.')
-    } finally {
+      toast.error('Failed to process photo. Please try again.')
       setUploading(false)
+    } finally {
       // Reset input so same file can be re-selected
       if (fileRef.current) fileRef.current.value = ''
     }
