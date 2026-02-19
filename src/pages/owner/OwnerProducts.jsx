@@ -153,10 +153,10 @@ export default function OwnerProducts() {
             <motion.div key={product.id} layout className="glass-card p-0 overflow-hidden group">
               <div className="aspect-square bg-surface-800 relative overflow-hidden">
                 <img
-                  src={product.images?.[0] || 'https://via.placeholder.com/400?text=No+Image'}
+                  src={product.images?.[0] || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"%3E%3Crect fill="%23374151" width="400" height="400"/%3E%3Ctext x="50%25" y="50%25" font-size="24" fill="%239CA3AF" text-anchor="middle" dominant-baseline="middle" font-family="Arial"%3ENo Image%3C/text%3E%3C/svg%3E'}
                   alt={product.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/400?text=Image+Error' }}
+                  onError={(e) => { e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"%3E%3Crect fill="%23374151" width="400" height="400"/%3E%3Ctext x="50%25" y="50%25" font-size="24" fill="%239CA3AF" text-anchor="middle" dominant-baseline="middle" font-family="Arial"%3EImage Error%3C/text%3E%3C/svg%3E' }}
                 />
                 {product.featured && (
                   <span className="absolute top-3 left-3 badge-brand text-xs">Featured</span>
@@ -197,7 +197,7 @@ export default function OwnerProducts() {
                   <td className="p-4">
                     <div className="flex items-center gap-3">
                       <img src={product.images?.[0] || ''} alt="" className="w-10 h-10 rounded-lg object-cover bg-surface-800"
-                        onError={(e) => { e.target.src = 'https://via.placeholder.com/40?text=?' }} />
+                        onError={(e) => { e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"%3E%3Crect fill="%23374151" width="40" height="40"/%3E%3C/svg%3E' }} />
                       <div>
                         <p className="text-sm font-medium">{product.name}</p>
                         {product.featured && <span className="badge-brand text-xs mt-0.5">Featured</span>}
@@ -258,7 +258,7 @@ export default function OwnerProducts() {
                         ) : img ? (
                           <>
                             <img src={img} alt="" className="w-full h-full object-cover"
-                              onError={(e) => { e.target.src = 'https://via.placeholder.com/400?text=Image+Error' }} />
+                              onError={(e) => { e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"%3E%3Crect fill="%23374151" width="400" height="400"/%3E%3Ctext x="50%25" y="50%25" font-size="24" fill="%239CA3AF" text-anchor="middle" dominant-baseline="middle" font-family="Arial"%3EImage Error%3C/text%3E%3C/svg%3E' }} />
                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                               <FiImage size={20} />
                             </div>

@@ -57,7 +57,7 @@ export default function Cart() {
                 <div className="flex gap-4 p-4">
                   <div className="w-24 h-24 rounded-xl overflow-hidden bg-surface-800 flex-shrink-0">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover"
-                      onError={(e) => { e.target.src = 'https://via.placeholder.com/100?text=?' }} />
+                      onError={(e) => { e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Crect fill="%23374151" width="100" height="100"/%3E%3C/svg%3E' }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-white truncate">{item.name}</h3>
