@@ -63,7 +63,7 @@ export default function ProductDetail() {
           <div className="glass-card p-0 overflow-hidden">
             <div className="aspect-square bg-surface-800">
               <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover"
-                onError={(e) => { e.target.src = 'https://via.placeholder.com/600?text=Image+Unavailable' }} />
+                onError={(e) => { e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600"%3E%3Crect fill="%23374151" width="600" height="600"/%3E%3Ctext x="50%25" y="50%25" font-size="32" fill="%239CA3AF" text-anchor="middle" dominant-baseline="middle" font-family="Arial"%3EImage Unavailable%3C/text%3E%3C/svg%3E' }} />
             </div>
           </div>
 
