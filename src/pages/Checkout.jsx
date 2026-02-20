@@ -106,7 +106,7 @@ export default function Checkout() {
     <div className="min-h-screen bg-surface-900">
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 pb-16">
-        <h1 className="font-display text-3xl font-bold mb-8">Checkout</h1>
+        <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
         {/* Steps */}
         <div className="flex items-center gap-4 mb-10">

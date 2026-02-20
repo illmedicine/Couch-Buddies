@@ -39,7 +39,7 @@ export default function Cart() {
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-16">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="font-display text-3xl font-bold">Shopping Cart</h1>
+          <h1 className="text-3xl font-bold">Shopping Cart</h1>
           <button onClick={clearCart} className="text-sm text-gray-400 hover:text-red-400 transition-colors">
             Clear all
           </button>
