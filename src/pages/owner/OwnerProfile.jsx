@@ -53,7 +53,7 @@ export default function OwnerProfile() {
           <p className="text-gray-400 mt-1">Manage your account settings and business info</p>
         </div>
         {!editing && (
-          <button onClick={() => setEditing(true)} className="btn-accent flex items-center gap-2">
+          <button onClick={() => setEditing(true)} className="btn-primary flex items-center gap-2">
             <FiEdit2 size={16} /> Edit Profile
           </button>
         )}
@@ -72,7 +72,7 @@ export default function OwnerProfile() {
             fallbackInitials={ownerProfile.avatar || 'CB'}
             storagePath={`owner-${ownerProfile.id || '1'}`}
             onUploadComplete={(url) => updateOwnerProfile({ photoURL: url })}
-            gradientClass="from-accent-600 to-accent-800"
+            gradientClass="from-brand-500 to-brand-700"
             editable={true}
             size="lg"
           />
@@ -192,7 +192,7 @@ export default function OwnerProfile() {
 
             {/* Actions */}
             <div className="flex items-center gap-3 pt-4 border-t border-white/10">
-              <button type="submit" className="btn-accent flex items-center gap-2">
+              <button type="submit" className="btn-primary flex items-center gap-2">
                 <FiSave size={16} /> Save Changes
               </button>
               <button type="button" onClick={handleCancel} className="btn-ghost">

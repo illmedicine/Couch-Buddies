@@ -1,99 +1,73 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useStore } from '../store/useStore'
-import { FiShoppingCart, FiUser, FiMenu, FiX, FiPackage, FiLogOut, FiLogIn } from 'react-icons/fi'
+import { FiShoppingCart, FiUser, FiMenu, FiX } from 'react-icons/fi'
+import { useState } from 'react'
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const { cart, currentUser, userRole, logout } = useStore()
-  const navigate = useNavigate()
+  const { cart, currentUser, userRole } = useStore()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
 
-  const handleLogout = () => {
-    logout()
-    navigate('/')
-  }
-
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-lg gradient-brand flex items-center justify-center font-bold text-sm">
-              🍬
-            </div>
-            <span className="font-display font-bold text-lg hidden sm:block group-hover:text-brand-400 transition-colors">
-              Couch Buddies
-            </span>
+          <Link to="/" className="flex items-center gap-2">
+            <span className="text-2xl"></span>
+            <span className="font-bold text-lg tracking-tight">Couch Buddies</span>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
-            <Link to="/shop" className="px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all text-sm font-medium">
-              Shop
+          <div className="hidden md:flex items-center gap-8">
+            <Link to="/shop" className={`text-sm font-medium transition-colors ${location.pathname === '/shop' ? 'text-brand-400' : 'text-gray-300 hover:text-white'}`}>
+              Shop All
             </Link>
-            {currentUser && userRole === 'customer' && !currentUser.isGuest && (
-              <Link to="/orders" className="px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all text-sm font-medium flex items-center gap-1.5">
-                <FiPackage size={15} /> Orders
-              </Link>
-            )}
+            <Link to="/shop?category=CBD+Gummies" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
+              Gummies
+            </Link>
+            <Link to="/shop?category=Tinctures" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
+              Tinctures
+            </Link>
+            <Link to="/shop?category=Chocolates" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
+              Chocolates
+            </Link>
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2">
-            <Link to="/cart" className="relative p-2.5 rounded-xl hover:bg-white/10 transition-all group">
-              <FiShoppingCart size={20} className="text-gray-300 group-hover:text-white" />
+          {/* Right side */}
+          <div className="flex items-center gap-4">
+            <Link to={currentUser ? (userRole === 'owner' ? '/owner' : userRole === 'staff' ? '/staff' : '/orders') : '/auth'}
+              className="text-gray-300 hover:text-white transition-colors">
+              <FiUser size={20} />
+            </Link>
+            <Link to="/cart" className="relative text-gray-300 hover:text-white transition-colors">
+              <FiShoppingCart size={20} />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-brand-500 text-white text-xs font-bold flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 w-5 h-5 bg-brand-500 text-black text-xs font-bold rounded-full flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
             </Link>
-
-            {currentUser && userRole === 'customer' ? (
-              <div className="flex items-center gap-2">
-                <span className="hidden sm:block text-sm text-gray-400">
-                  {currentUser.isGuest ? 'Guest' : currentUser.name}
-                </span>
-                <button onClick={handleLogout} className="p-2.5 rounded-xl hover:bg-white/10 transition-all" title="Sign out">
-                  <FiLogOut size={18} className="text-gray-400 hover:text-white" />
-                </button>
-              </div>
-            ) : (
-              <Link to="/auth" className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all">
-                <FiLogIn size={16} /> Sign In
-              </Link>
-            )}
-
-            {/* Mobile menu toggle */}
-            <button
-              className="md:hidden p-2 rounded-xl hover:bg-white/10 transition-all"
-              onClick={() => setMobileOpen(!mobileOpen)}
-            >
-              {mobileOpen ? <FiX size={20} /> : <FiMenu size={20} />}
+            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-gray-300 hover:text-white">
+              {menuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-white/10 bg-surface-900/95 backdrop-blur-xl animate-slide-down">
-          <div className="px-4 py-3 space-y-1">
-            <Link to="/shop" onClick={() => setMobileOpen(false)}
-              className="block px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-all font-medium">
-              Shop
-            </Link>
-            {currentUser && userRole === 'customer' && !currentUser.isGuest && (
-              <Link to="/orders" onClick={() => setMobileOpen(false)}
-                className="block px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-all font-medium">
-                My Orders
-              </Link>
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="md:hidden border-t border-white/5 py-4 space-y-1 animate-slide-down">
+            <Link to="/shop" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">Shop All</Link>
+            <Link to="/shop?category=CBD+Gummies" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">Gummies</Link>
+            <Link to="/shop?category=Tinctures" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">Tinctures</Link>
+            <Link to="/shop?category=Chocolates" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">Chocolates</Link>
+            {currentUser && (
+              <Link to="/orders" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">My Orders</Link>
             )}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </nav>
   )
 }

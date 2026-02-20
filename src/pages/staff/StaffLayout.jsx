@@ -33,30 +33,29 @@ export default function StaffLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-950 flex">
-      {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-surface-900 border-r border-white/5 flex flex-col transition-transform duration-300 ${
+    <div className="min-h-screen bg-surface-900 flex">
+      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-black/40 border-r border-white/5 flex flex-col transition-transform duration-300 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       }`}>
-        <div className="p-6 flex items-center justify-between">
+        <div className="p-5 flex items-center justify-between border-b border-white/5">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center font-bold text-sm">
+            <div className="w-9 h-9 rounded-lg bg-brand-500 flex items-center justify-center font-bold text-sm text-black">
               CB
             </div>
             <div>
-              <span className="font-display font-bold text-sm">Couch Buddies</span>
-              <p className="text-xs text-brand-400">Staff Portal</p>
+              <span className="font-semibold text-sm">Couch Buddies</span>
+              <p className="text-[11px] text-brand-400 font-medium">Staff Portal</p>
             </div>
           </div>
-          <button className="lg:hidden text-gray-400" onClick={() => setSidebarOpen(false)}>
+          <button className="lg:hidden text-gray-400 hover:text-white" onClick={() => setSidebarOpen(false)}>
             <FiX size={20} />
           </button>
         </div>
 
         {/* Staff Info */}
-        <div className="px-4 mb-4">
+        <div className="px-3 py-3">
           <div className="p-3 rounded-xl bg-white/5 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold bg-brand-500/20 text-brand-400 flex-shrink-0">
+            <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold bg-brand-500/20 text-brand-400 flex-shrink-0">
               {currentUser?.photoURL ? (
                 <img src={currentUser.photoURL} alt={currentUser.name} className="w-full h-full object-cover" />
               ) : (
@@ -65,13 +64,13 @@ export default function StaffLayout() {
             </div>
             <div className="min-w-0">
               <p className="font-medium text-sm truncate">{currentUser?.name}</p>
-            <p className="text-xs text-gray-400 mt-0.5">
-              {currentUser?.clockedIn ? (
-                <span className="text-emerald-400">● Clocked In — {currentUser?.clockType || currentUser?.role}</span>
-              ) : (
-                <span className="text-gray-500">○ Not clocked in</span>
-              )}
-            </p>
+              <p className="text-[11px] text-gray-400">
+                {currentUser?.clockedIn ? (
+                  <span className="text-emerald-400"> Clocked In</span>
+                ) : (
+                  <span className="text-gray-500"> Off duty</span>
+                )}
+              </p>
             </div>
           </div>
         </div>
@@ -103,15 +102,15 @@ export default function StaffLayout() {
       </aside>
 
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       <main className="flex-1 min-w-0">
-        <header className="sticky top-0 z-30 h-16 glass border-b border-white/5 flex items-center px-4 sm:px-6 gap-4">
+        <header className="sticky top-0 z-30 h-14 bg-surface-900/80 backdrop-blur-md border-b border-white/5 flex items-center px-4 sm:px-6 gap-4">
           <button className="lg:hidden text-gray-400 hover:text-white" onClick={() => setSidebarOpen(true)}>
             <FiMenu size={20} />
           </button>
-          <h2 className="font-display font-semibold text-lg">Staff Dashboard</h2>
+          <h2 className="font-semibold text-sm text-gray-300">Staff Dashboard</h2>
         </header>
 
         <div className="p-4 sm:p-6 lg:p-8">

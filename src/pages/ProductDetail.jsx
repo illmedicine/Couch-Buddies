@@ -22,7 +22,7 @@ export default function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-surface-950">
+      <div className="min-h-screen bg-surface-900">
         <Navbar />
         <div className="max-w-7xl mx-auto px-4 pt-24 text-center">
           <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
@@ -48,7 +48,7 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-950">
+    <div className="min-h-screen bg-surface-900">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-16">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">

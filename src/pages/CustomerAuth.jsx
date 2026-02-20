@@ -17,7 +17,7 @@ export default function CustomerAuth() {
   // If already logged in as customer, redirect
   if (currentUser && userRole === 'customer') {
     return (
-      <div className="min-h-screen bg-surface-950">
+      <div className="min-h-screen bg-surface-900">
         <Navbar />
         <div className="max-w-md mx-auto px-4 pt-24 text-center">
           <div className="glass-card py-12">
@@ -76,7 +76,7 @@ export default function CustomerAuth() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-950">
+    <div className="min-h-screen bg-surface-900">
       <Navbar />
       <div className="max-w-md mx-auto px-4 pt-24 pb-16">
         <motion.div

@@ -1,17 +1,18 @@
 import { useState, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { FiSearch, FiFilter, FiGrid, FiList } from 'react-icons/fi'
+import { FiSearch, FiGrid, FiList } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 
-const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' fill='%231a1a2e'%3E%3Crect width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='16'%3ENo Image%3C/text%3E%3C/svg%3E"
+const PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' fill='%23141414'%3E%3Crect width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23333' font-family='sans-serif' font-size='14'%3ENo Image%3C/text%3E%3C/svg%3E"
 
 export default function Shop() {
   const { products } = useStore()
+  const [searchParams] = useSearchParams()
   const [search, setSearch] = useState('')
-  const [category, setCategory] = useState('All')
+  const [category, setCategory] = useState(searchParams.get('category') || 'All')
   const [sortBy, setSortBy] = useState('featured')
   const [viewMode, setViewMode] = useState('grid')
 
@@ -22,7 +23,7 @@ export default function Shop() {
     if (category !== 'All') result = result.filter(p => p.category === category)
     if (search) result = result.filter(p =>
       p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.description.toLowerCase().includes(search.toLowerCase())
+      p.description?.toLowerCase().includes(search.toLowerCase())
     )
     switch (sortBy) {
       case 'price-low': result.sort((a, b) => a.price - b.price); break
@@ -35,115 +36,65 @@ export default function Shop() {
   }, [products, category, search, sortBy])
 
   return (
-    <div className="min-h-screen bg-surface-950">
+    <div className="min-h-screen bg-surface-900">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-16">
-        {/* Header */}
         <div className="mb-8">
-          <h1 className="font-display text-3xl sm:text-4xl font-bold mb-2">🍭 Sweet Shop</h1>
-          <p className="text-gray-400">Browse our full collection of CBD treats, candy goodies & herbal wellness products</p>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2">Shop All</h1>
+          <p className="text-gray-400 text-sm">Browse our full collection of CBD treats & wellness products</p>
         </div>
 
         {/* Filters */}
         <div className="flex flex-col lg:flex-row gap-4 mb-8">
-          {/* Search */}
           <div className="relative flex-1">
-            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="input-field pl-11"
-            />
+            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
+            <input type="text" placeholder="Search products..." value={search} onChange={(e) => setSearch(e.target.value)} className="input-field pl-11 text-sm" />
           </div>
-
-          {/* Category Pills */}
           <div className="flex gap-2 flex-wrap">
             {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setCategory(cat)}
-                className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+              <button key={cat} onClick={() => setCategory(cat)}
+                className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   category === cat
-                    ? 'gradient-brand text-white shadow-lg shadow-brand-500/25'
-                    : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 border border-white/10'
-                }`}
-              >
+                    ? 'bg-brand-500 text-black'
+                    : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 border border-white/5'}`}>
                 {cat}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Sort & View */}
         <div className="flex items-center justify-between mb-6">
-          <p className="text-gray-400 text-sm">{filtered.length} products</p>
+          <p className="text-gray-500 text-sm">{filtered.length} products</p>
           <div className="flex items-center gap-3">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="input-field w-auto text-sm py-2"
-            >
+            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="input-field w-auto text-sm py-2 pr-8">
               <option value="featured">Featured</option>
               <option value="newest">Newest</option>
               <option value="price-low">Price: Low to High</option>
               <option value="price-high">Price: High to Low</option>
             </select>
-            <div className="hidden sm:flex gap-1 bg-white/5 rounded-xl p-1 border border-white/10">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white/10 text-white' : 'text-gray-400'}`}
-              >
-                <FiGrid size={16} />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white/10 text-white' : 'text-gray-400'}`}
-              >
-                <FiList size={16} />
-              </button>
+            <div className="hidden sm:flex gap-1 bg-white/5 rounded-lg p-1">
+              <button onClick={() => setViewMode('grid')} className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white/10 text-white' : 'text-gray-500'}`}><FiGrid size={16} /></button>
+              <button onClick={() => setViewMode('list')} className={`p-2 rounded ${viewMode === 'list' ? 'bg-white/10 text-white' : 'text-gray-500'}`}><FiList size={16} /></button>
             </div>
           </div>
         </div>
 
-        {/* Product Grid */}
+        {/* Grid */}
         {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filtered.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-              >
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {filtered.map((product, i) => (
+              <motion.div key={product.id} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: i * 0.03 }}>
                 <Link to={`/product/${product.id}`} className="group block">
-                  <div className="glass-card p-0 overflow-hidden hover:border-brand-500/30 transition-all duration-300 hover:-translate-y-1">
-                    <div className="aspect-square overflow-hidden bg-surface-800 relative">
-                      <img
-                        src={product.images?.[0] || PLACEHOLDER_IMG}
-                        alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
-                        referrerPolicy="no-referrer"
-                        onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_IMG } }}
-                      />
-                      {product.featured && (
-                        <span className="absolute top-3 left-3 badge-brand">Featured</span>
-                      )}
-                      {product.stock < 20 && (
-                        <span className="absolute top-3 right-3 badge-danger">Low Stock</span>
-                      )}
+                  <div className="rounded-xl overflow-hidden bg-surface-800 border border-white/5 hover:border-white/10 transition-all">
+                    <div className="aspect-square overflow-hidden relative">
+                      <img src={product.images?.[0] || PLACEHOLDER} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" onError={(e) => { if (!e.target.dataset.f) { e.target.dataset.f='1'; e.target.src=PLACEHOLDER } }} />
+                      {product.featured && <span className="absolute top-2 left-2 text-xs font-semibold px-2 py-1 rounded bg-brand-500 text-black">Featured</span>}
+                      {product.stock < 20 && <span className="absolute top-2 right-2 text-xs font-semibold px-2 py-1 rounded bg-red-600/90 text-white">Low Stock</span>}
                     </div>
                     <div className="p-4">
-                      <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{product.category}</p>
-                      <h3 className="font-semibold text-white group-hover:text-brand-400 transition-colors line-clamp-1">
-                        {product.name}
-                      </h3>
-                      <div className="flex items-center justify-between mt-2">
-                        <p className="text-brand-400 font-bold text-lg">${product.price.toFixed(2)}</p>
-                        <p className="text-xs text-gray-500">{product.stock} in stock</p>
-                      </div>
+                      <p className="text-[11px] text-gray-500 uppercase tracking-wider mb-0.5">{product.category}</p>
+                      <h3 className="text-sm font-medium text-gray-200 group-hover:text-white transition-colors line-clamp-1">{product.name}</h3>
+                      <p className="text-brand-400 font-semibold mt-1">${product.price?.toFixed(2)}</p>
                     </div>
                   </div>
                 </Link>
@@ -151,30 +102,19 @@ export default function Shop() {
             ))}
           </div>
         ) : (
-          <div className="space-y-4">
-            {filtered.map((product, index) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-              >
+          <div className="space-y-3">
+            {filtered.map((product, i) => (
+              <motion.div key={product.id} initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3, delay: i * 0.03 }}>
                 <Link to={`/product/${product.id}`} className="group block">
-                  <div className="glass-card p-0 overflow-hidden hover:border-brand-500/30 transition-all flex">
-                    <div className="w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 overflow-hidden bg-surface-800">
-                      <img src={product.images?.[0] || PLACEHOLDER_IMG} alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        referrerPolicy="no-referrer"
-                        onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_IMG } }} />
+                  <div className="flex rounded-xl overflow-hidden bg-surface-800 border border-white/5 hover:border-white/10 transition-all">
+                    <div className="w-28 h-28 sm:w-36 sm:h-36 flex-shrink-0 overflow-hidden">
+                      <img src={product.images?.[0] || PLACEHOLDER} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" onError={(e) => { if (!e.target.dataset.f) { e.target.dataset.f='1'; e.target.src=PLACEHOLDER } }} />
                     </div>
                     <div className="p-4 flex-1 flex flex-col justify-center">
-                      <p className="text-xs text-gray-500 uppercase tracking-wider">{product.category}</p>
-                      <h3 className="font-semibold text-white group-hover:text-brand-400 transition-colors">{product.name}</h3>
-                      <p className="text-gray-400 text-sm line-clamp-2 mt-1">{product.description}</p>
-                      <div className="flex items-center gap-3 mt-2">
-                        <p className="text-brand-400 font-bold text-lg">${product.price.toFixed(2)}</p>
-                        {product.featured && <span className="badge-brand">Featured</span>}
-                      </div>
+                      <p className="text-[11px] text-gray-500 uppercase tracking-wider">{product.category}</p>
+                      <h3 className="text-sm font-medium text-gray-200 group-hover:text-white transition-colors">{product.name}</h3>
+                      <p className="text-gray-400 text-xs line-clamp-2 mt-1">{product.description}</p>
+                      <p className="text-brand-400 font-semibold mt-2">${product.price?.toFixed(2)}</p>
                     </div>
                   </div>
                 </Link>
@@ -186,9 +126,7 @@ export default function Shop() {
         {filtered.length === 0 && (
           <div className="text-center py-20">
             <p className="text-gray-400 text-lg">No products found</p>
-            <button onClick={() => { setSearch(''); setCategory('All') }} className="btn-secondary mt-4">
-              Clear Filters
-            </button>
+            <button onClick={() => { setSearch(''); setCategory('All') }} className="btn-secondary mt-4 text-sm">Clear Filters</button>
           </div>
         )}
       </div>

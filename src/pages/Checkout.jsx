@@ -41,7 +41,7 @@ export default function Checkout() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-surface-950">
+      <div className="min-h-screen bg-surface-900">
         <Navbar />
         <div className="max-w-7xl mx-auto px-4 pt-24 text-center">
           <h2 className="text-2xl font-bold mb-4">Nothing to checkout</h2>
@@ -103,7 +103,7 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-950">
+    <div className="min-h-screen bg-surface-900">
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 pb-16">
         <h1 className="font-display text-3xl font-bold mb-8">Checkout</h1>
