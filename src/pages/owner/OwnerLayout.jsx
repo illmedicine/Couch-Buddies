@@ -34,12 +34,8 @@ export default function OwnerLayout() {
       }`}>
         <div className="p-5 flex items-center justify-between border-b border-white/5">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-brand-500 flex items-center justify-center font-bold text-sm text-black overflow-hidden">
-              {ownerProfile?.photoURL ? (
-                <img src={ownerProfile.photoURL} alt="Owner" className="w-full h-full object-cover" />
-              ) : (
-                'CB'
-              )}
+            <div className="w-9 h-9 rounded-lg overflow-hidden">
+              <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Couch Buddies" className="w-full h-full object-cover" />
             </div>
             <div>
               <span className="font-semibold text-sm">Couch Buddies</span>

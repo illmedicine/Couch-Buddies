@@ -29,9 +29,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-brand-500 flex items-center justify-center text-black font-black text-sm">
-              CB
-            </div>
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Couch Buddies" className="w-9 h-9 rounded-lg object-cover" />
             <span className="text-lg font-bold tracking-tight hidden sm:block">Couch Buddies</span>
           </Link>
 

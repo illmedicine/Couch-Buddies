@@ -20,7 +20,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-brand-500 flex items-center justify-center text-black font-black text-sm">CB</div>
+              <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Couch Buddies" className="w-9 h-9 rounded-lg object-cover" />
               <span className="text-lg font-bold">Couch Buddies</span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed mb-4">
