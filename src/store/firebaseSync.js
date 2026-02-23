@@ -18,6 +18,9 @@ const SHARED_KEYS = [
   'ownerProfile',
 ]
 
+// Keys that are expected to be arrays — Firebase RTDB can convert these to objects
+const ARRAY_KEYS = ['products', 'staff', 'orders', 'messages', 'inStoreSales', 'customers']
+
 // ─── Default shared state used when Firebase is empty (first-time seed) ───
 const DEFAULT_SHARED_STATE = {
   products: seedProducts,
@@ -60,20 +63,83 @@ function cleanForFirebase(data) {
   return JSON.parse(JSON.stringify(data))
 }
 
-// Firebase stores empty arrays as null — restore proper defaults
-function restoreDefaults(key, value) {
-  if (value !== null && value !== undefined) return value
-  const defaults = {
-    products: [],
-    staff: [],
-    orders: [],
-    messages: [],
-    inStoreSales: [],
-    customers: [],
-    treasury: { balance: 0, accounts: [], transactions: [] },
-    ownerProfile: { id: 'owner-1', name: 'Owner', email: 'owner@couchbuddies.com', phone: '', businessName: 'Couch Buddies', businessAddress: '', pin: '1234', avatar: 'CB', createdAt: '2026-01-01T00:00:00Z' },
+// Firebase RTDB converts arrays to objects with numeric keys (e.g. {0: {...}, 1: {...}})
+// This normalizes them back to proper arrays and recursively fixes nested structures
+function normalizeFirebaseValue(key, value) {
+  if (value === null || value === undefined) return value
+
+  // If this key should be an array but Firebase returned an object, convert it
+  if (ARRAY_KEYS.includes(key) && !Array.isArray(value) && typeof value === 'object') {
+    // Convert object with numeric keys to array, filtering out nulls
+    const arr = Object.values(value).filter(item => item !== null && item !== undefined)
+    return arr
   }
-  return defaults[key] ?? null
+
+  // For array-type keys, ensure all elements are valid (no nulls from sparse arrays)
+  if (ARRAY_KEYS.includes(key) && Array.isArray(value)) {
+    return value.filter(item => item !== null && item !== undefined)
+  }
+
+  // For objects like 'treasury', recursively normalize nested arrays
+  if (typeof value === 'object' && !Array.isArray(value)) {
+    const normalized = { ...value }
+    for (const prop of Object.keys(normalized)) {
+      const v = normalized[prop]
+      // Detect object-masquerading-as-array: all keys are integers
+      if (v && typeof v === 'object' && !Array.isArray(v)) {
+        const keys = Object.keys(v)
+        const allNumeric = keys.length > 0 && keys.every(k => /^\d+$/.test(k))
+        if (allNumeric) {
+          normalized[prop] = Object.values(v).filter(item => item !== null && item !== undefined)
+        }
+      }
+    }
+    return normalized
+  }
+
+  return value
+}
+
+// Firebase stores empty arrays as null — restore proper defaults
+// Also normalizes arrays that Firebase returned as objects
+function restoreDefaults(key, value) {
+  // First normalize the Firebase data type
+  const normalized = normalizeFirebaseValue(key, value)
+
+  // If null/undefined after normalization, return defaults
+  if (normalized === null || normalized === undefined) {
+    const defaults = {
+      products: [],
+      staff: [],
+      orders: [],
+      messages: [],
+      inStoreSales: [],
+      customers: [],
+      treasury: { balance: 0, accounts: [], transactions: [] },
+      ownerProfile: { id: 'owner-1', name: 'Owner', email: 'owner@couchbuddies.com', phone: '', businessName: 'Couch Buddies', businessAddress: '', pin: '1234', avatar: 'CB', createdAt: '2026-01-01T00:00:00Z' },
+    }
+    return defaults[key] ?? null
+  }
+
+  return normalized
+}
+
+// Write to Firebase with error handling and retry
+const MAX_RETRIES = 2
+async function safeFirebaseWrite(path, data, retryCount = 0) {
+  try {
+    await fbSet(ref(db, path), cleanForFirebase(data))
+  } catch (err) {
+    console.error(`[FirebaseSync] Write failed for "${path}":`, err.message)
+    if (retryCount < MAX_RETRIES) {
+      const delay = (retryCount + 1) * 1000
+      console.log(`[FirebaseSync] Retrying write for "${path}" in ${delay}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
+      await new Promise(resolve => setTimeout(resolve, delay))
+      return safeFirebaseWrite(path, data, retryCount + 1)
+    } else {
+      console.error(`[FirebaseSync] Write permanently failed for "${path}" after ${MAX_RETRIES + 1} attempts`)
+    }
+  }
 }
 
 // ─── Recover old localStorage data from before the Firebase migration ───
@@ -208,6 +274,7 @@ export function FirebaseSync() {
     })
 
     // 2. Subscribe to real-time changes for each shared key
+    let keysLoaded = 0
     for (const key of SHARED_KEYS) {
       const keyRef = ref(db, `store/${key}`)
       const unsub = onValue(keyRef, (snapshot) => {
@@ -215,31 +282,47 @@ export function FirebaseSync() {
         _syncingFromFirebase = true
         useStore.setState({ [key]: val })
         _syncingFromFirebase = false
+
+        // Track how many keys have loaded from Firebase
+        keysLoaded++
+        if (keysLoaded >= SHARED_KEYS.length && !useStore.getState()._firebaseReady) {
+          useStore.setState({ _firebaseReady: true })
+          console.log('[FirebaseSync] All shared keys loaded — Firebase is ready')
+        }
       }, (error) => {
         console.error(`[FirebaseSync] Listener error for "${key}":`, error)
+        // Still count as loaded to not block forever
+        keysLoaded++
+        if (keysLoaded >= SHARED_KEYS.length && !useStore.getState()._firebaseReady) {
+          useStore.setState({ _firebaseReady: true })
+        }
       })
       unsubscribers.push(unsub)
     }
 
-    // 3. Mark Firebase as ready once first data arrives
-    //    (the onValue listeners fire immediately with cached/server data)
-    const readyUnsub = onValue(ref(db, 'store/products'), () => {
-      useStore.setState({ _firebaseReady: true })
-      readyUnsub() // only need the first callback
-    }, { onlyOnce: true })
+    // 3. Fallback: mark as ready after timeout in case Firebase is slow
+    const readyTimeout = setTimeout(() => {
+      if (!useStore.getState()._firebaseReady) {
+        console.warn('[FirebaseSync] Firebase ready timeout — proceeding with available data')
+        useStore.setState({ _firebaseReady: true })
+      }
+    }, 8000)
 
     // 4. Watch local Zustand mutations → write changed shared keys to Firebase
+    //    GATED: only writes AFTER Firebase data has loaded to prevent overwriting real data with seed defaults
     const storeUnsub = useStore.subscribe((state, prevState) => {
       if (_syncingFromFirebase) return
+      if (!state._firebaseReady) return // Don't write until Firebase data is loaded
 
       for (const key of SHARED_KEYS) {
         if (state[key] !== prevState[key]) {
-          fbSet(ref(db, `store/${key}`), cleanForFirebase(state[key]))
+          safeFirebaseWrite(`store/${key}`, state[key])
         }
       }
     })
 
     return () => {
+      clearTimeout(readyTimeout)
       unsubscribers.forEach(fn => fn())
       storeUnsub()
     }

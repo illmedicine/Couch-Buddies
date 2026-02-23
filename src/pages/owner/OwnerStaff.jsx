@@ -3,6 +3,7 @@ import { useStore } from '../../store/useStore'
 import { FiPlus, FiEdit2, FiTrash2, FiX, FiSave, FiDollarSign, FiMapPin, FiClock, FiSearch } from 'react-icons/fi'
 import toast from 'react-hot-toast'
 import { motion, AnimatePresence } from 'framer-motion'
+import ProfilePhotoUpload from '../../components/ProfilePhotoUpload'
 
 export default function OwnerStaff() {
   const { staff, addStaff, updateStaff, deleteStaff, payStaff, treasury } = useStore()
@@ -38,10 +39,18 @@ export default function OwnerStaff() {
       if (updatedData.name) {
         updatedData.avatar = updatedData.name.split(' ').map(n => n[0]).join('').toUpperCase()
       }
+      // Ensure photoURL is explicitly included (even if undefined → remove old photo)
+      if (editingStaff.photoURL !== undefined) {
+        updatedData.photoURL = editingStaff.photoURL
+      }
       updateStaff(editingStaff.id, updatedData)
       toast.success('Staff updated!')
     } else {
-      addStaff(editingStaff)
+      const newStaffData = { ...editingStaff }
+      if (newStaffData.photoURL) {
+        // Include photo for new staff
+      }
+      addStaff(newStaffData)
       toast.success('Staff member added!')
     }
     closeModal()
@@ -174,6 +183,22 @@ export default function OwnerStaff() {
                 <button onClick={closeModal} className="p-2 rounded-lg hover:bg-white/10"><FiX /></button>
               </div>
               <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                {/* Staff Photo Upload */}
+                <div className="flex items-center gap-4">
+                  <ProfilePhotoUpload
+                    currentPhotoURL={editingStaff.photoURL || null}
+                    fallbackInitials={editingStaff.name ? editingStaff.name.split(' ').map(n => n[0]).join('').toUpperCase() : '??'}
+                    storagePath={`staff-${editingStaff.id || 'new'}`}
+                    onUploadComplete={(url) => setEditingStaff({ ...editingStaff, photoURL: url })}
+                    gradientClass="from-accent-500 to-accent-700"
+                    editable={true}
+                    size="md"
+                  />
+                  <div>
+                    <p className="text-sm font-medium">{editingStaff.id ? 'Update Photo' : 'Add Photo'}</p>
+                    <p className="text-xs text-gray-500">Click the avatar to upload</p>
+                  </div>
+                </div>
                 <div>
                   <label className="block text-sm text-gray-400 mb-1">Full Name *</label>
                   <input type="text" required value={editingStaff.name}

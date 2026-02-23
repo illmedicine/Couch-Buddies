@@ -9,6 +9,13 @@ import { seedProducts, seedStaff } from './seedData'
 
 const generateId = () => Math.random().toString(36).substr(2, 9) + Date.now().toString(36)
 
+// Safety helper: ensure a value is always an array (protects against Firebase object conversion)
+const ensureArray = (val) => {
+  if (Array.isArray(val)) return val
+  if (val && typeof val === 'object') return Object.values(val).filter(Boolean)
+  return []
+}
+
 export const useStore = create(
   persist(
     (set, get) => ({
@@ -68,7 +75,7 @@ export const useStore = create(
         return false
       },
       loginAsStaff: (staffId, pin) => {
-        const staff = get().staff.find(s => s.id === staffId)
+        const staff = ensureArray(get().staff).find(s => s.id === staffId)
         if (staff && (pin === '0000' || pin === staff.pin)) {
           set({ currentUser: { ...staff }, userRole: 'staff' })
           return true
@@ -81,15 +88,15 @@ export const useStore = create(
       products: seedProducts,
 
       addProduct: (product) => set(state => ({
-        products: [...state.products, { ...product, id: generateId(), createdAt: new Date().toISOString() }]
+        products: [...ensureArray(state.products), { ...product, id: generateId(), createdAt: new Date().toISOString() }]
       })),
 
       updateProduct: (id, updates) => set(state => ({
-        products: state.products.map(p => p.id === id ? { ...p, ...updates } : p)
+        products: ensureArray(state.products).map(p => p.id === id ? { ...p, ...updates } : p)
       })),
 
       deleteProduct: (id) => set(state => ({
-        products: state.products.filter(p => p.id !== id)
+        products: ensureArray(state.products).filter(p => p.id !== id)
       })),
 
       // ─── Cart ───
@@ -145,27 +152,27 @@ export const useStore = create(
           createdAt: new Date().toISOString(),
           timeline: [{ status: 'pending', time: new Date().toISOString(), note: 'Order placed' }],
         }
-        set(state => ({ orders: [...state.orders, order], cart: [] }))
+        set(state => ({ orders: [...ensureArray(state.orders), order], cart: [] }))
         return order
       },
 
       updateOrderStatus: (orderId, status, note = '') => set(state => ({
-        orders: state.orders.map(o => o.id === orderId ? {
+        orders: ensureArray(state.orders).map(o => o.id === orderId ? {
           ...o,
           status,
-          timeline: [...o.timeline, { status, time: new Date().toISOString(), note }]
+          timeline: [...(o.timeline || []), { status, time: new Date().toISOString(), note }]
         } : o)
       })),
 
       assignDriver: (orderId, driverId) => set(state => ({
-        orders: state.orders.map(o => o.id === orderId ? {
+        orders: ensureArray(state.orders).map(o => o.id === orderId ? {
           ...o,
           driverId,
           status: 'assigned',
-          timeline: [...o.timeline, {
+          timeline: [...(o.timeline || []), {
             status: 'assigned',
             time: new Date().toISOString(),
-            note: `Assigned to driver ${state.staff.find(s => s.id === driverId)?.name || driverId}`
+            note: `Assigned to driver ${ensureArray(state.staff).find(s => s.id === driverId)?.name || driverId}`
           }]
         } : o)
       })),
@@ -174,7 +181,7 @@ export const useStore = create(
       staff: seedStaff,
 
       addStaff: (staffData) => set(state => ({
-        staff: [...state.staff, {
+        staff: [...ensureArray(state.staff), {
           id: generateId(),
           clockedIn: false,
           clockHistory: [],
@@ -187,15 +194,15 @@ export const useStore = create(
       })),
 
       updateStaff: (id, updates) => set(state => ({
-        staff: state.staff.map(s => s.id === id ? { ...s, ...updates } : s)
+        staff: ensureArray(state.staff).map(s => s.id === id ? { ...s, ...updates } : s)
       })),
 
       deleteStaff: (id) => set(state => ({
-        staff: state.staff.filter(s => s.id !== id)
+        staff: ensureArray(state.staff).filter(s => s.id !== id)
       })),
 
       clockIn: (staffId, type, location) => set(state => ({
-        staff: state.staff.map(s => s.id === staffId ? {
+        staff: ensureArray(state.staff).map(s => s.id === staffId ? {
           ...s,
           clockedIn: true,
           clockType: type,
@@ -210,7 +217,7 @@ export const useStore = create(
       })),
 
       clockOut: (staffId) => set(state => ({
-        staff: state.staff.map(s => s.id === staffId ? {
+        staff: ensureArray(state.staff).map(s => s.id === staffId ? {
           ...s,
           clockedIn: false,
           clockType: null,
@@ -223,7 +230,7 @@ export const useStore = create(
       })),
 
       updateStaffLocation: (staffId, location) => set(state => ({
-        staff: state.staff.map(s => s.id === staffId ? { ...s, location } : s)
+        staff: ensureArray(state.staff).map(s => s.id === staffId ? { ...s, location } : s)
       })),
 
       // ─── Staff Wallet / Payments ───
@@ -237,20 +244,20 @@ export const useStore = create(
           time: new Date().toISOString(),
         }
         return {
-          staff: state.staff.map(s => s.id === staffId ? {
+          staff: ensureArray(state.staff).map(s => s.id === staffId ? {
             ...s,
             wallet: {
-              balance: s.wallet.balance + amount,
-              transactions: [...s.wallet.transactions, transaction]
+              balance: (s.wallet?.balance || 0) + amount,
+              transactions: [...(s.wallet?.transactions || []), transaction]
             }
           } : s),
           treasury: {
             ...state.treasury,
             balance: state.treasury.balance - amount,
-            transactions: [...state.treasury.transactions, {
+            transactions: [...ensureArray(state.treasury?.transactions), {
               ...transaction,
               type: 'staff-payment',
-              to: state.staff.find(s => s.id === staffId)?.name || staffId,
+              to: ensureArray(state.staff).find(s => s.id === staffId)?.name || staffId,
             }]
           }
         }
@@ -271,22 +278,22 @@ export const useStore = create(
       addTreasuryAccount: (account) => set(state => ({
         treasury: {
           ...state.treasury,
-          accounts: [...state.treasury.accounts, { ...account, id: generateId(), connected: true }]
+          accounts: [...ensureArray(state.treasury?.accounts), { ...account, id: generateId(), connected: true }]
         }
       })),
 
       removeTreasuryAccount: (accountId) => set(state => ({
         treasury: {
           ...state.treasury,
-          accounts: state.treasury.accounts.filter(a => a.id !== accountId)
+          accounts: ensureArray(state.treasury?.accounts).filter(a => a.id !== accountId)
         }
       })),
 
       addTreasuryFunds: (amount, note) => set(state => ({
         treasury: {
           ...state.treasury,
-          balance: state.treasury.balance + amount,
-          transactions: [...state.treasury.transactions, {
+          balance: (state.treasury?.balance || 0) + amount,
+          transactions: [...ensureArray(state.treasury?.transactions), {
             id: generateId(),
             type: 'deposit',
             amount,
@@ -304,7 +311,7 @@ export const useStore = create(
       ],
 
       sendMessage: (message) => set(state => ({
-        messages: [...state.messages, {
+        messages: [...ensureArray(state.messages), {
           id: generateId(),
           ...message,
           time: new Date().toISOString(),
@@ -321,31 +328,34 @@ export const useStore = create(
           status: 'pending',
           createdAt: new Date().toISOString(),
         }
-        set(state => ({ inStoreSales: [...state.inStoreSales, newSale] }))
+        set(state => ({ inStoreSales: [...ensureArray(state.inStoreSales), newSale] }))
         return newSale
       },
 
-      completeInStoreSale: (saleId) => set(state => ({
-        inStoreSales: state.inStoreSales.map(s => s.id === saleId ? { ...s, status: 'completed' } : s),
-        treasury: {
-          ...state.treasury,
-          balance: state.treasury.balance + (state.inStoreSales.find(s => s.id === saleId)?.total || 0),
-          transactions: [...state.treasury.transactions, {
-            id: generateId(),
-            type: 'sale',
-            amount: state.inStoreSales.find(s => s.id === saleId)?.total || 0,
-            note: `In-store sale ${saleId}`,
-            time: new Date().toISOString(),
-            from: 'In-Store POS',
-          }]
+      completeInStoreSale: (saleId) => set(state => {
+        const sales = ensureArray(state.inStoreSales)
+        return {
+          inStoreSales: sales.map(s => s.id === saleId ? { ...s, status: 'completed' } : s),
+          treasury: {
+            ...state.treasury,
+            balance: (state.treasury?.balance || 0) + (sales.find(s => s.id === saleId)?.total || 0),
+            transactions: [...ensureArray(state.treasury?.transactions), {
+              id: generateId(),
+              type: 'sale',
+              amount: sales.find(s => s.id === saleId)?.total || 0,
+              note: `In-store sale ${saleId}`,
+              time: new Date().toISOString(),
+              from: 'In-Store POS',
+            }]
+          }
         }
-      })),
+      }),
 
       // ─── Customers (registered) ───
       customers: [],
 
       registerCustomer: (customer) => set(state => ({
-        customers: [...state.customers, {
+        customers: [...ensureArray(state.customers), {
           id: generateId(),
           ...customer,
           points: 0,
@@ -386,6 +396,7 @@ export const useStore = create(
         }
         // Write seed data to Firebase so all clients reset
         fbSet(ref(db, 'store'), JSON.parse(JSON.stringify(seedState)))
+          .catch(err => console.error('[Store] resetStore Firebase write failed:', err))
         set({
           ...seedState,
           cart: [],
