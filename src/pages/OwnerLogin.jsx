@@ -26,7 +26,7 @@ export default function OwnerLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-surface-900 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -38,7 +38,7 @@ export default function OwnerLogin() {
 
         <div className="glass-card">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-600 to-accent-800 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center mx-auto mb-4">
               <FiLock size={28} />
             </div>
             <h1 className="font-display text-2xl font-bold">Owner Portal</h1>
@@ -58,7 +58,7 @@ export default function OwnerLogin() {
                 autoFocus
               />
             </div>
-            <button type="submit" className="btn-accent w-full py-4 text-lg">
+            <button type="submit" className="btn-primary w-full py-4 text-lg">
               Access Dashboard
             </button>
           </form>

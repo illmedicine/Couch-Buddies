@@ -5,6 +5,8 @@ import Footer from '../components/Footer'
 import { FiTrash2, FiMinus, FiPlus, FiShoppingBag, FiArrowRight } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 
+const PLACEHOLDER_SM = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%231a1a2e'%3E%3Crect width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='12'%3E?%3C/text%3E%3C/svg%3E"
+
 export default function Cart() {
   const { cart, updateCartItem, removeFromCart, clearCart } = useStore()
 
@@ -15,7 +17,7 @@ export default function Cart() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-surface-950">
+      <div className="min-h-screen bg-surface-900">
         <Navbar />
         <div className="max-w-7xl mx-auto px-4 pt-24 pb-16 text-center">
           <div className="glass-card max-w-md mx-auto py-16">
@@ -33,11 +35,11 @@ export default function Cart() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-950">
+    <div className="min-h-screen bg-surface-900">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-16">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="font-display text-3xl font-bold">Shopping Cart</h1>
+          <h1 className="text-3xl font-bold">Shopping Cart</h1>
           <button onClick={clearCart} className="text-sm text-gray-400 hover:text-red-400 transition-colors">
             Clear all
           </button>
@@ -57,7 +59,8 @@ export default function Cart() {
                 <div className="flex gap-4 p-4">
                   <div className="w-24 h-24 rounded-xl overflow-hidden bg-surface-800 flex-shrink-0">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover"
-                      onError={(e) => { e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Crect fill="%23374151" width="100" height="100"/%3E%3C/svg%3E' }} />
+                      referrerPolicy="no-referrer"
+                      onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_SM } }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-white truncate">{item.name}</h3>

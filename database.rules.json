@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "store": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}

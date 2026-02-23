@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useStore } from '../../store/useStore'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { storage } from '../../firebase'
 import { FiPlus, FiEdit2, FiTrash2, FiImage, FiSearch, FiX, FiSave, FiGrid, FiList, FiLoader } from 'react-icons/fi'
+
+// Reliable inline SVG placeholder (no external dependency)
+const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' fill='%231a1a2e'%3E%3Crect width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='16'%3ENo Image%3C/text%3E%3C/svg%3E"
+const PLACEHOLDER_SM = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' fill='%231a1a2e'%3E%3Crect width='40' height='40'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='10'%3E?%3C/text%3E%3C/svg%3E"
 import toast from 'react-hot-toast'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -79,25 +81,55 @@ export default function OwnerProducts() {
 
       setUploadingIndex(index)
       try {
-        const ext = file.name.split('.').pop()
-        const filename = `product_${Date.now()}_${index}.${ext}`
-        const storageRef = ref(storage, `products/${filename}`)
-
-        await uploadBytes(storageRef, file)
-        const downloadURL = await getDownloadURL(storageRef)
+        // Compress image client-side and convert to base64 data URI
+        // This stores images directly in the database, bypassing Firebase Storage CORS issues
+        const dataURL = await compressImage(file, 800, 0.75)
 
         const imgs = [...editingProduct.images]
-        imgs[index] = downloadURL
+        imgs[index] = dataURL
         setEditingProduct({ ...editingProduct, images: imgs })
         toast.success('Image uploaded!')
       } catch (err) {
-        console.error('Product image upload failed:', err)
-        toast.error('Failed to upload image. Check Firebase Storage settings.')
+        console.error('Product image processing failed:', err)
+        toast.error('Failed to process image')
       } finally {
         setUploadingIndex(-1)
       }
     }
     input.click()
+  }
+
+  // Compress and resize an image file to a base64 data URI
+  function compressImage(file, maxSize = 800, quality = 0.75) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          let { width, height } = img
+          // Scale down to maxSize while preserving aspect ratio
+          if (width > maxSize || height > maxSize) {
+            if (width > height) {
+              height = Math.round((height * maxSize) / width)
+              width = maxSize
+            } else {
+              width = Math.round((width * maxSize) / height)
+              height = maxSize
+            }
+          }
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, width, height)
+          resolve(canvas.toDataURL('image/jpeg', quality))
+        }
+        img.onerror = reject
+        img.src = e.target.result
+      }
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
   }
 
   return (

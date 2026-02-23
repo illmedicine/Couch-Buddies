@@ -7,6 +7,8 @@ import { FiCheck, FiCreditCard, FiDollarSign, FiSmartphone } from 'react-icons/f
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
 
+const PLACEHOLDER_SM = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%231a1a2e'%3E%3Crect width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23555' font-family='sans-serif' font-size='12'%3E?%3C/text%3E%3C/svg%3E"
+
 const paymentMethods = [
   { id: 'card', name: 'Credit/Debit Card', icon: FiCreditCard, color: 'text-blue-400' },
   { id: 'cashapp', name: 'CashApp', icon: FiDollarSign, color: 'text-green-400' },
@@ -39,7 +41,7 @@ export default function Checkout() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-surface-950">
+      <div className="min-h-screen bg-surface-900">
         <Navbar />
         <div className="max-w-7xl mx-auto px-4 pt-24 text-center">
           <h2 className="text-2xl font-bold mb-4">Nothing to checkout</h2>
@@ -101,10 +103,10 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-950">
+    <div className="min-h-screen bg-surface-900">
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 pb-16">
-        <h1 className="font-display text-3xl font-bold mb-8">Checkout</h1>
+        <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
         {/* Steps */}
         <div className="flex items-center gap-4 mb-10">
@@ -296,7 +298,8 @@ export default function Checkout() {
                 <div key={item.id} className="flex gap-3">
                   <div className="w-12 h-12 rounded-lg overflow-hidden bg-surface-800 flex-shrink-0">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover"
-                      onError={(e) => { e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Crect fill="%23374151" width="100" height="100"/%3E%3C/svg%3E' }} />
+                      referrerPolicy="no-referrer"
+                      onError={(e) => { if (!e.target.dataset.fallback) { e.target.dataset.fallback = '1'; e.target.src = PLACEHOLDER_SM } }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{item.name}</p>

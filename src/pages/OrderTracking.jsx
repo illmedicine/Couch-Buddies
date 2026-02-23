@@ -14,7 +14,7 @@ export default function OrderTracking() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-surface-950">
+      <div className="min-h-screen bg-surface-900">
         <Navbar />
         <div className="max-w-4xl mx-auto px-4 pt-24 text-center">
           <FiPackage size={48} className="mx-auto text-gray-500 mb-4" />
@@ -30,7 +30,7 @@ export default function OrderTracking() {
   const driver = order.driverId ? staff.find(s => s.id === order.driverId) : null
 
   return (
-    <div className="min-h-screen bg-surface-950">
+    <div className="min-h-screen bg-surface-900">
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 pb-16">
         <Link to="/orders" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6">
