@@ -10,6 +10,7 @@ export default function Navbar() {
 
   const categories = [
     { label: 'Shop All', to: '/shop' },
+    { label: 'Flower', to: '/shop?category=Flower' },
     { label: 'Gummies', to: '/shop?category=Gummies+%26+Edibles' },
     { label: 'Tinctures', to: '/shop?category=Tinctures' },
     { label: 'Vapes', to: '/shop?category=Vapes' },

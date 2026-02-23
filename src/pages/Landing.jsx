@@ -9,6 +9,7 @@ import { useState } from 'react'
 const PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' fill='%23141414'%3E%3Crect width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23333' font-family='sans-serif' font-size='14'%3ENo Image%3C/text%3E%3C/svg%3E"
 
 const categories = [
+  { name: 'Flower', image: 'https://images.unsplash.com/photo-1603909223429-69bb7101f420?w=600&h=700&fit=crop&q=80', query: 'Flower' },
   { name: 'Gummies & Edibles', image: 'https://images.unsplash.com/photo-1625517236224-4dbb5b54e612?w=600&h=700&fit=crop&q=80', query: 'Gummies+%26+Edibles' },
   { name: 'Tinctures', image: 'https://images.unsplash.com/photo-1611070042580-e707a0c6ff26?w=600&h=700&fit=crop&q=80', query: 'Tinctures' },
   { name: 'Vapes', image: 'https://images.unsplash.com/photo-1560913210-81b26e020c1f?w=600&h=700&fit=crop&q=80', query: 'Vapes' },

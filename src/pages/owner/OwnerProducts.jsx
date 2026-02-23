@@ -337,7 +337,7 @@ export default function OwnerProducts() {
                     <select value={editingProduct.category}
                       onChange={e => setEditingProduct({ ...editingProduct, category: e.target.value })}
                       className="input-field">
-                      {['Flowers', 'Pens', 'EdIBLES', 'Merch'].map(c => (
+                      {['Flower', 'Gummies & Edibles', 'Tinctures', 'Chocolates', 'Hard Candy', 'Beverages', 'Topicals', 'Vapes', 'Pre-Rolls', 'Pens', 'Merch', 'Limited Edition'].map(c => (
                         <option key={c} value={c} className="bg-surface-800">{c}</option>
                       ))}
                     </select>

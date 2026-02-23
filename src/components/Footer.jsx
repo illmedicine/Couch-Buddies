@@ -33,6 +33,7 @@ export default function Footer() {
             <h4 className="text-xs font-semibold uppercase tracking-widest text-gray-300 mb-4">Categories</h4>
             <ul className="space-y-2.5">
               <li><Link to="/shop" className="text-sm text-gray-400 hover:text-brand-400 transition-colors">All Products</Link></li>
+              <li><Link to="/shop?category=Flower" className="text-sm text-gray-400 hover:text-brand-400 transition-colors">Flower</Link></li>
               <li><Link to="/shop?category=Gummies+%26+Edibles" className="text-sm text-gray-400 hover:text-brand-400 transition-colors">Gummies & Edibles</Link></li>
               <li><Link to="/shop?category=Tinctures" className="text-sm text-gray-400 hover:text-brand-400 transition-colors">Tinctures</Link></li>
               <li><Link to="/shop?category=Vapes" className="text-sm text-gray-400 hover:text-brand-400 transition-colors">Vapes</Link></li>
