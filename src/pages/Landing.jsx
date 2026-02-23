@@ -60,6 +60,8 @@ export default function Landing() {
               <a href="#blog" className="btn-secondary text-base px-8 py-4">Read Our Blog</a>
             </div>
           </motion.div>
+        </div>
+      </section>
 
       {/* Featured Products */}
       <section className="py-20 relative">
