@@ -11,7 +11,7 @@ export const seedProducts = [
     colors: ['Mixed Fruit', 'Tropical', 'Berry Blast'],
     stock: 150,
     featured: true,
-    images: ['https://images.unsplash.com/photo-1625517236224-4dbb5b54e612?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1599599960960-52d7d529894f?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-01-15T00:00:00Z',
   },
   {
@@ -24,7 +24,7 @@ export const seedProducts = [
     colors: ['Rainbow', 'Watermelon', 'Blue Raspberry'],
     stock: 200,
     featured: true,
-    images: ['https://images.unsplash.com/photo-1597235635233-cfac8c1b1b97?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1599599810960-52d7d529894f?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-01-15T00:00:00Z',
   },
   {
@@ -37,7 +37,7 @@ export const seedProducts = [
     colors: ['Honey Lavender', 'Peppermint', 'Natural'],
     stock: 80,
     featured: true,
-    images: ['https://images.unsplash.com/photo-1611070042580-e707a0c6ff26?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1516534775068-bb8fce2d0a47?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-01-20T00:00:00Z',
   },
   {
@@ -50,7 +50,7 @@ export const seedProducts = [
     colors: ['Milk Chocolate', 'Dark Chocolate', 'White Chocolate'],
     stock: 120,
     featured: false,
-    images: ['https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-01-25T00:00:00Z',
   },
   {
@@ -63,7 +63,7 @@ export const seedProducts = [
     colors: ['Peach', 'Mango', 'Strawberry'],
     stock: 90,
     featured: true,
-    images: ['https://images.unsplash.com/photo-1590080876796-80cd2b211c44?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1554866585-58d5999d65ae?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-02-01T00:00:00Z',
   },
   {
@@ -76,7 +76,7 @@ export const seedProducts = [
     colors: ['Cherry', 'Green Apple', 'Watermelon', 'Grape'],
     stock: 250,
     featured: false,
-    images: ['https://images.unsplash.com/photo-1581798459219-318e76aecc7b?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1599599960960-52d7d529894f?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-02-01T00:00:00Z',
   },
   {
@@ -89,7 +89,7 @@ export const seedProducts = [
     colors: ['Variety Pack', 'All Strawberry', 'All Blue Raspberry'],
     stock: 45,
     featured: true,
-    images: ['https://images.unsplash.com/photo-1626200419199-391ae4be7a41?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1554866585-58d5999d65ae?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-02-05T00:00:00Z',
   },
   {
@@ -102,7 +102,7 @@ export const seedProducts = [
     colors: ['Classic Sampler', 'Calming Blends', 'Energy Blends'],
     stock: 160,
     featured: false,
-    images: ['https://images.unsplash.com/photo-1563911892437-1feda0179e1b?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-02-08T00:00:00Z',
   },
   {
@@ -115,7 +115,7 @@ export const seedProducts = [
     colors: ['Natural', 'Mint', 'Citrus'],
     stock: 70,
     featured: true,
-    images: ['https://images.unsplash.com/photo-1616091238769-beafeec6d035?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1516534775068-bb8fce2d0a47?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-02-10T00:00:00Z',
   },
   {
@@ -128,7 +128,7 @@ export const seedProducts = [
     colors: ['Cooling Menthol', 'Warming Cinnamon', 'Unscented'],
     stock: 95,
     featured: false,
-    images: ['https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1585203849294-bc13f4a3de5c?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-02-12T00:00:00Z',
   },
   {
@@ -141,7 +141,7 @@ export const seedProducts = [
     colors: ['Blue Dream', 'OG Kush', 'Gelato', 'Pineapple Express'],
     stock: 180,
     featured: true,
-    images: ['https://images.unsplash.com/photo-1560913210-81b26e020c1f?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1587828694545-c9e0a1e9d8b4?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-02-14T00:00:00Z',
   },
   {
@@ -154,7 +154,7 @@ export const seedProducts = [
     colors: ['Indica Blend', 'Sativa Blend', 'Hybrid Blend'],
     stock: 110,
     featured: true,
-    images: ['https://images.unsplash.com/photo-1586165368502-1bad9cc98341?w=800&h=800&fit=crop&q=80'],
+    images: ['https://images.unsplash.com/photo-1574859482302-6d1f0c1b2d0f?w=800&h=800&fit=crop&q=80'],
     createdAt: '2026-02-15T00:00:00Z',
   },
 ]
